@@ -1,8 +1,14 @@
-# Smart City Labor FIWARE Platform
+# FIWARE-based Smart City Platform – SCiLabs
 
-The FIWARE platform of the Smart City Labor (smart city lab) of [SCiLabs](https://github.com/scilabs-bo). It collects, stores and visualizes the data of the sensors in the lab with [FIWARE](https://www.fiware.org/) components. Sensors send their data via LoRaWAN (The Things Network), MQTT or HTTP to IoT Agents. A Scorpio NGSI-LD context broker manages the entities, QuantumLeap stores the time series in TimescaleDB and Grafana shows them in dashboards.
+This repository provides the resources you need to build your own Smart City platform. It is a contribution of the Bochum University of Applied Sciences, Professorship for Urban Energy and Mobility Systems, led by Haydar Mecit. His R&D team developed these resources to realize a collaborative R&D lab, the Smart City Labs (SCiLabs; in German “Smart City Forschungslabor”).
 
-The repository shows the platform as it runs in the lab. Most integrations belong to specific devices (Libelium and Froggit weather stations, Bosch parking sensors, DO300 parking barrier, Zenner and Dragino sensors, eLichens air quality station, a 3D printed miniature house). Without these devices the development stack shows data from a simulated Froggit weather station. The configuration of the devices can serve as an example for your own sensors.
+The platform is based on open-source technologies provided by the FIWARE Foundation. In the same open-source spirit, you are welcome to use the technologies we developed for your own purposes and for the public good.
+
+The platform collects, stores and visualizes data from sensors installed in living labs (for example, IoT devices such as weather stations placed in public spaces of a city) using FIWARE components. Sensors send their data via LoRaWAN (The Things Network), MQTT or HTTP to so-called IoT Agents. A Scorpio NGSI-LD context broker manages the entities, QuantumLeap stores the time series in TimescaleDB, and Grafana displays them in dashboards. Besides environmental and mobility data, the dashboards can also show smart energy data from prosumer homes, such as photovoltaic generation, battery state of charge, heat pump power and household consumption.
+
+The repository shows the platform as it runs in our Smart City lab. Most integrations are specific to particular devices: Libelium and Froggit weather stations, Bosch parking sensors, a DO300 parking barrier, Zenner and Dragino sensors, an eLichens air quality station and a 3D-printed miniature house. Without these devices, the development stack shows data from a simulated Froggit weather station. The device configurations can serve as examples for your own sensors.
+
+We gratefully acknowledge the funding by the German Federal Ministry of Research, Technology and Space (BMFTR), funding number 13FH0I93IA, which made this work possible.
 
 ## Contents
 
