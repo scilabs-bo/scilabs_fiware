@@ -1,0 +1,23 @@
+{
+  "$schema": "https://www.krakend.io/schema/v2.7/krakend.json",
+  "version": 3,
+  "name": "Smart City API Gateway",
+  "port": 8080,
+  "host": ["http://context-broker:9090"],
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "endpoints": [
+    {
+      "@comment": "This is a Test endpoint for the scorpio API",
+      "endpoint": "/v1/entities/{type}",
+      "backend": [
+        {
+          "host": ["http://context-broker:9090"],
+          "url_pattern": "/ngsi-ld/v1/entities/?type={type}",
+          "encoding": "json",
+          "is_collection": true
+        }
+      ]
+    }
+  ]
+}

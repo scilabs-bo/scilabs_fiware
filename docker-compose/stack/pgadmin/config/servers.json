@@ -1,0 +1,12 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Quantumleap",
+      "Group": "Servers",
+      "Host": "timescale-db-quantumleap",
+      "Port": 5432,
+      "MaintenanceDB": "quantumleap",
+      "Username": "grafanareader"
+    }
+  }
+}

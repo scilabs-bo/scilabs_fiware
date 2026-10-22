@@ -1,0 +1,971 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "powerHouseConsumption": {
+      "@id": "ngsi-ld:powerHouseConsumption",
+      "@type": "Property",
+      "description": "Electrical power consumption by house (EcoPower Station)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WTT"
+      }
+    },
+    "powerGrid": {
+      "@id": "ngsi-ld:powerGrid",
+      "@type": "Property",
+      "description": "Electrical power from grid",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "powerPV": {
+      "@id": "ngsi-ld:powerPV",
+      "@type": "Property",
+      "description": "Electrical power from PV",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "batteryPowerDC": {
+      "@id": "ngsi-ld:batteryPowerDC",
+      "@type": "Property",
+      "description": "Battery power in DC (Volterion)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "batteryPowerAC": {
+      "@id": "ngsi-ld:batteryPowerAC",
+      "@type": "Property",
+      "description": "Battery power in AC (Volterion)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "batteryStateOfCharge": {
+      "@id": "ngsi-ld:batteryStateOfCharge",
+      "@type": "Property",
+      "description": "Battery state of charge (SoC)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "batteryChargeCycles": {
+      "@id": "ngsi-ld:batteryChargeCycles",
+      "@type": "Property",
+      "description": "Battery charge cycles",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "batteryPumpPower": {
+      "@id": "ngsi-ld:batteryPumpPower",
+      "@type": "Property",
+      "description": "Battery pump power (Volterion)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "batteryPowerEcoPowerStation": {
+      "@id": "ngsi-ld:batteryPowerEcoPowerStation",
+      "@type": "Property",
+      "description": "Battery power (EcoPower Station)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatPumpPower": {
+      "@id": "ngsi-ld:heatPumpPower",
+      "@type": "Property",
+      "description": "Power for heat pump",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatPumpReservePower2": {
+      "@id": "ngsi-ld:heatPumpReservePower2",
+      "@type": "Property",
+      "description": "Reserve value for second heat pump",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatPumpThermalPower": {
+      "@id": "ngsi-ld:heatPumpThermalPower",
+      "@type": "Property",
+      "description": "Thermal power for heat pump",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatingThermalPower": {
+      "@id": "ngsi-ld:heatingThermalPower",
+      "@type": "Property",
+      "description": "Thermal power in heating mode",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "hotWaterThermalPower": {
+      "@id": "ngsi-ld:hotWaterThermalPower",
+      "@type": "Property",
+      "description": "Thermal power in hot water mode",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatPumpCoefficientOfPerformance": {
+      "@id": "ngsi-ld:heatPumpCoefficientOfPerformance",
+      "@type": "Property",
+      "description": "Coefficient of performance (COP) for heat pump",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "condensationPressure": {
+      "@id": "ngsi-ld:condensationPressure",
+      "@type": "Property",
+      "description": "Condensation pressure",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Float"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:BAR"
+      }
+    },
+    "expansionValveOpeningDegree": {
+      "@id": "ngsi-ld:expansionValveOpeningDegree",
+      "@type": "Property",
+      "description": "Expansion valve opening degree",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Float"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "evaporationPressure": {
+      "@id": "ngsi-ld:evaporationPressure",
+      "@type": "Property",
+      "description": "Evaporation pressure",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:BAR"
+      }
+    },
+    "suctionGasTemperature": {
+      "@id": "ngsi-ld:suctionGasTemperature",
+      "@type": "Property",
+      "description": "Suction gas temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "returnTemperatureSetpoint": {
+      "@id": "ngsi-ld:returnTemperatureSetpoint",
+      "@type": "Property",
+      "description": "Return temperature setpoint",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "hotWaterTemperatureSetpoint": {
+      "@id": "ngsi-ld:hotWaterTemperatureSetpoint",
+      "@type": "Property",
+      "description": "Hot water temperature setpoint",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "heatPumpSwitchingState1": {
+      "@id": "ngsi-ld:heatPumpSwitchingState1",
+      "@type": "Property",
+      "description": "Switching states of heat pump Part 1",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "heatPumpErrorE1": {
+      "@id": "ngsi-ld:heatPumpErrorE1",
+      "@type": "Property",
+      "description": "Error in heat pump E1",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "heatPumpInterruptions": {
+      "@id": "ngsi-ld:heatPumpInterruptions",
+      "@type": "Property",
+      "description": "Interruptions in heat pump",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "heatPumpSwitchingState1Duplicate": {
+      "@id": "ngsi-ld:heatPumpSwitchingState1Duplicate",
+      "@type": "Property",
+      "description": "Switching states of heat pump Part 1",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "heatingPumpPower": {
+      "@id": "ngsi-ld:heatingPumpPower",
+      "@type": "Property",
+      "description": "Heating pump power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatingPumpControlPercentage": {
+      "@id": "ngsi-ld:heatingPumpControlPercentage",
+      "@type": "Property",
+      "description": "Percentage control of heating pump",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "flowTemperature": {
+      "@id": "ngsi-ld:flowTemperature",
+      "@type": "Property",
+      "description": "Flow temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "returnTemperature": {
+      "@id": "ngsi-ld:returnTemperature",
+      "@type": "Property",
+      "description": "Return temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "sourcePumpPower": {
+      "@id": "ngsi-ld:sourcePumpPower",
+      "@type": "Property",
+      "description": "Source pump power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "sourcePumpControlPercentage": {
+      "@id": "ngsi-ld:sourcePumpControlPercentage",
+      "@type": "Property",
+      "description": "Percentage control of source pump",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "sourceExitTemperature": {
+      "@id": "ngsi-ld:sourceExitTemperature",
+      "@type": "Property",
+      "description": "Source exit temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "sourceEntryTemperature": {
+      "@id": "ngsi-ld:sourceEntryTemperature",
+      "@type": "Property",
+      "description": "Source entry temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "compressorStartCount": {
+      "@id": "ngsi-ld:compressorStartCount",
+      "@type": "Property",
+      "description": "Compressor start count",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Integer"
+      }
+    },
+    "hotWaterValveControl": {
+      "@id": "ngsi-ld:hotWaterValveControl",
+      "@type": "Property",
+      "description": "Control of hot water valve (True=On, False=Off)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "currentHotWaterTemperature": {
+      "@id": "ngsi-ld:currentHotWaterTemperature",
+      "@type": "Property",
+      "description": "Current hot water temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "electricHeatingPower": {
+      "@id": "ngsi-ld:electricHeatingPower",
+      "@type": "Property",
+      "description": "Electric heating element power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "electricHeatingControl": {
+      "@id": "ngsi-ld:electricHeatingControl",
+      "@type": "Property",
+      "description": "Control of electric heating element (True=On, False=Off)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "trenchCollectorSupplyTemperature": {
+      "@id": "ngsi-ld:trenchCollectorSupplyTemperature",
+      "@type": "Property",
+      "description": "Supply temperature of trench collector",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "trenchCollectorReturnTemperature": {
+      "@id": "ngsi-ld:trenchCollectorReturnTemperature",
+      "@type": "Property",
+      "description": "Return temperature of trench collector",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "solarAbsorberSupplyTemperature": {
+      "@id": "ngsi-ld:solarAbsorberSupplyTemperature",
+      "@type": "Property",
+      "description": "Supply temperature of solar absorber",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "solarAbsorberReturnTemperature": {
+      "@id": "ngsi-ld:solarAbsorberReturnTemperature",
+      "@type": "Property",
+      "description": "Return temperature of solar absorber",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "solarAbsorberValveControl": {
+      "@id": "ngsi-ld:solarAbsorberValveControl",
+      "@type": "Property",
+      "description": "Solar absorber valve control (True=Active, False=Inactive)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "groundAbsorberValveControl": {
+      "@id": "ngsi-ld:groundAbsorberValveControl",
+      "@type": "Property",
+      "description": "Ground absorber valve control (True=Inactive, False=Active)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "ecoPowerBoosterPower": {
+      "@id": "ngsi-ld:ecoPowerBoosterPower",
+      "@type": "Property",
+      "description": "EcoPower Booster power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "boosterHotWaterThermalPower": {
+      "@id": "ngsi-ld:boosterHotWaterThermalPower",
+      "@type": "Property",
+      "description": "Hot water thermal power for booster",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "ecoPowerBoosterSourceEntryTemperature": {
+      "@id": "ngsi-ld:ecoPowerBoosterSourceEntryTemperature",
+      "@type": "Property",
+      "description": "EcoPower Booster source entry temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "ecoPowerBoosterSourceExitTemperature": {
+      "@id": "ngsi-ld:ecoPowerBoosterSourceExitTemperature",
+      "@type": "Property",
+      "description": "EcoPower Booster source exit temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "ecoPackDrinkingWaterStationPower": {
+      "@id": "ngsi-ld:ecoPackDrinkingWaterStationPower",
+      "@type": "Property",
+      "description": "EcoPack drinking water station power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "ventilationSupplyAirTemperature": {
+      "@id": "ngsi-ld:ventilationSupplyAirTemperature",
+      "@type": "Property",
+      "description": "Ventilation supply air temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "ventilationExhaustAirTemperature": {
+      "@id": "ngsi-ld:ventilationExhaustAirTemperature",
+      "@type": "Property",
+      "description": "Ventilation exhaust air temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "ventilationOutsideAirTemperature": {
+      "@id": "ngsi-ld:ventilationOutsideAirTemperature",
+      "@type": "Property",
+      "description": "Ventilation outside air temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "ventilationReturnAirTemperature": {
+      "@id": "ngsi-ld:ventilationReturnAirTemperature",
+      "@type": "Property",
+      "description": "Ventilation exhaust air temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "ventilationPower": {
+      "@id": "ngsi-ld:ventilationPower",
+      "@type": "Property",
+      "description": "Ventilation power (EcoVent)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "roomAirTemperature": {
+      "@id": "ngsi-ld:roomAirTemperature",
+      "@type": "Property",
+      "description": "Room air temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "currentOutsideTemperature": {
+      "@id": "ngsi-ld:currentOutsideTemperature",
+      "@type": "Property",
+      "description": "Current outside temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "outsideTemperature1hAverage": {
+      "@id": "ngsi-ld:outsideTemperature1hAverage",
+      "@type": "Property",
+      "description": "1-hour average outside temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "outsideTemperature24hAverage": {
+      "@id": "ngsi-ld:outsideTemperature24hAverage",
+      "@type": "Property",
+      "description": "24-hour average outside temperature",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "houseNumber": {
+      "@id": "ngsi-ld:houseNumber",
+      "@type": "Property",
+      "description": "House number",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "reserve5": {
+      "@id": "ngsi-ld:reserve5",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "reserve6": {
+      "@id": "ngsi-ld:reserve6",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "powerReserve5": {
+      "@id": "ngsi-ld:powerReserve5",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "powerReserve6": {
+      "@id": "ngsi-ld:powerReserve6",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "powerReserve7": {
+      "@id": "ngsi-ld:powerReserve7",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "powerReserve8": {
+      "@id": "ngsi-ld:powerReserve8",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "powerReserveComp": {
+      "@id": "ngsi-ld:powerReserveComp",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "powerGridReserve2": {
+      "@id": "ngsi-ld:powerGridReserve2",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "reserveI2": {
+      "@id": "ngsi-ld:reserveI2",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "reserveI3": {
+      "@id": "ngsi-ld:reserveI3",
+      "@type": "Property",
+      "description": "Reserve",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "boosterThermalPower": {
+      "@id": "ngsi-ld:boosterThermalPower",
+      "@type": "Property",
+      "description": "EcoPower Booster thermal power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatingPumpThermalPower": {
+      "@id": "ngsi-ld:heatingPumpThermalPower",
+      "@type": "Property",
+      "description": "Heating pump thermal power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "sourcePumpThermalPower": {
+      "@id": "ngsi-ld:sourcePumpThermalPower",
+      "@type": "Property",
+      "description": "Source pump thermal power",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "ecoPackDrinkingWaterThermalPower": {
+      "@id": "ngsi-ld:ecoPackDrinkingWaterThermalPower",
+      "@type": "Property",
+      "description": "Thermal power of drinking water station (EcoPack)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "ventilationThermalPower": {
+      "@id": "ngsi-ld:ventilationThermalPower",
+      "@type": "Property",
+      "description": "Ventilation thermal power (EcoVent)",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "heatMeterFlowRate": {
+      "@id": "ngsi-ld:heatMeterFlowRate",
+      "@type": "Property",
+      "description": "Heat meter flow rate",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "heatMeterTemperatureA": {
+      "@id": "ngsi-ld:heatMeterTemperatureA",
+      "@type": "Property",
+      "description": "Temperature at sensor A of heat meter",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "heatMeterTemperatureB": {
+      "@id": "ngsi-ld:heatMeterTemperatureB",
+      "@type": "Property",
+      "description": "Temperature at sensor B of heat meter",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "heatMeterTemperatureDifference": {
+      "@id": "ngsi-ld:heatMeterTemperatureDifference",
+      "@type": "Property",
+      "description": "Temperature difference at heat meter",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "totalHeatAmount": {
+      "@id": "ngsi-ld:totalHeatAmount",
+      "@type": "Property",
+      "description": "Total heat amount",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WWT"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

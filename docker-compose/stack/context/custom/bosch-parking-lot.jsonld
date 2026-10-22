@@ -1,0 +1,87 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "Attribute": "ngsi-ld:Attribute",
+    "Property": "ngsi-ld:Property",
+    "GeoProperty": "ngsi-ld:GeoProperty",
+    "DateTime": "ngsi-ld:DateTime",
+    "String": "ngsi-ld:String",
+    "messageType": {
+      "@id": "ngsi-ld:messageType",
+      "@type": "Property",
+      "description": "Address of sensor location",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "occupied": {
+      "@id": "ngsi-ld:occupied",
+      "@type": "Property",
+      "description": "Is this parking lot occupied.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "debugCodes": {
+      "@id": "ngsi-ld:debugCodes",
+      "@type": "Property",
+      "description": "Raw bytes for debugging.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "firmwareVersion": {
+      "@id": "ngsi-ld:firmwareVersion",
+      "@type": "Property",
+      "description": "Version of the deployed firmware.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "resetCause": {
+      "@id": "ngsi-ld:resetCause",
+      "@type": "Property",
+      "description": "Reason for last reset.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "location": {
+      "@id": "ngsi-ld:location",
+      "@type": "GeoProperty",
+      "description": "The geographic location of the entity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:Point"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

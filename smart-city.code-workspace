@@ -1,0 +1,54 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "Docs",
+      "path": "docs"
+    },
+    {
+      "name": "Docker Compose",
+      "path": "docker-compose"
+    },
+    {
+      "name": "HttpClient",
+      "path": "http"
+    }
+  ],
+  "settings": {
+    "mdb.connectionSaving.defaultConnectionSavingLocation": "Workspace",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "docker": true,
+      "docker-compose": true,
+      "docs-templates": true
+    },
+    "codeTemplateTool.templatesPath": "{workspace}/.vscode/templates",
+    "codeTemplateTool.userInput.confirmOnEnter": true,
+    "codeTemplateTool.userInput.cancelOnEscape": true,
+    "codeTemplateTool.variable.leftBoundary": "{{",
+    "codeTemplateTool.variable.rightBoundary": "}}"
+  },
+  "extensions": {
+    "recommendations": [
+      "bierner.markdown-mermaid",
+      "ckolkman.vscode-postgres",
+      "eamodio.gitlens",
+      "esbenp.prettier-vscode",
+      "gruntfuggly.todo-tree",
+      "humao.rest-client",
+      "ms-azuretools.vscode-docker",
+      "ms-python.vscode-pylance",
+      "streetsidesoftware.code-spell-checker-german",
+      "streetsidesoftware.code-spell-checker",
+      "ms-python.black-formatter",
+      "yuanhjty.code-template-tool"
+    ]
+  }
+}

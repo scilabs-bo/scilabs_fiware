@@ -1,0 +1,219 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "batteryVoltage": {
+      "@id": "ngsi-ld:batteryVoltage",
+      "@type": "Property",
+      "description": "Battery voltage.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:VLT"
+      }
+    },
+    "batteryCurrent": {
+      "@id": "ngsi-ld:batteryCurrent",
+      "@type": "Property",
+      "description": "Battery current.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:AMP"
+      }
+    },
+    "batteryPower": {
+      "@id": "ngsi-ld:batteryPower",
+      "@type": "Property",
+      "description": "Battery power.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WTT"
+      }
+    },
+    "solarModuleVoltage": {
+      "@id": "ngsi-ld:solarModuleVoltage",
+      "@type": "Property",
+      "description": "Voltage of the solar module.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:VLT"
+      }
+    },
+    "solarModuleCurrent": {
+      "@id": "ngsi-ld:solarModuleCurrent",
+      "@type": "Property",
+      "description": "Current of the solar module.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:AMP"
+      }
+    },
+    "solarModulePower": {
+      "@id": "ngsi-ld:solarModulePower",
+      "@type": "Property",
+      "description": "Power produced by the solar module.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WTT"
+      }
+    },
+    "energyExchangeVoltage": {
+      "@id": "ngsi-ld:energyExchangeVoltage",
+      "@type": "Property",
+      "description": "Voltage of the energy exchange system.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:VLT"
+      }
+    },
+    "energyExchangeCurrent": {
+      "@id": "ngsi-ld:energyExchangeCurrent",
+      "@type": "Property",
+      "description": "Current of the energy exchange system.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:AMP"
+      }
+    },
+    "energyExchangePower": {
+      "@id": "ngsi-ld:energyExchangePower",
+      "@type": "Property",
+      "description": "Power of the energy exchange system.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WTT"
+      }
+    },
+    "loadVoltage": {
+      "@id": "ngsi-ld:loadVoltage",
+      "@type": "Property",
+      "description": "Load voltage.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:VLT"
+      }
+    },
+    "loadCurrent": {
+      "@id": "ngsi-ld:loadCurrent",
+      "@type": "Property",
+      "description": "Load current.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:AMP"
+      }
+    },
+    "loadPower": {
+      "@id": "ngsi-ld:loadPower",
+      "@type": "Property",
+      "description": "Load power.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WTT"
+      }
+    },
+    "batteryChargeLevel": {
+      "@id": "ngsi-ld:batteryChargeLevel",
+      "@type": "Property",
+      "description": "Charing level of the battery.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "energyExchangeMode": {
+      "@id": "ngsi-ld:energyExchangeMode",
+      "@type": "Property",
+      "description": "Mode of the the energy exchange system.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "batteryCapacity": {
+      "@id": "ngsi-ld:batteryCapacity",
+      "@type": "Property",
+      "description": "Remaining battery capacity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:AMH"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

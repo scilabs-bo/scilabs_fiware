@@ -1,0 +1,163 @@
+### iot agent json - Register new service energyApiKey
+
+POST http://localhost:4041/iot/services HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+{
+    "services": [
+    {
+      "apikey": "energyApiKey",
+      "cbroker": "http://localhost:9090",
+      "entity_type": "energy-meter",
+      "resource": "/iot/json",
+      "attributes": [
+        { "object_id": "meterPoint", "name": "meterPoint", "type": "String" },
+        { "object_id": "timestamp", "name": "timestamp", "type": "DateTime" },
+        { "object_id": "activeConsumption", "name": "activeConsumption", "type": "Float" },
+        { "object_id": "statusActiveConsumption", "name": "statusActiveConsumption", "type": "Boolean" },
+        { "object_id": "reactiveConsumption", "name": "reactiveConsumption", "type": "Float" },
+        { "object_id": "statusReactiveConsumption", "name": "statusReactiveConsumption", "type": "Boolean" },
+        { "object_id": "activeFeed", "name": "activeFeed", "type": "Float" },
+        { "object_id": "statusActiveFeed", "name": "statusActiveFeed", "type": "Boolean" },
+        { "object_id": "reactiveFeed", "name": "reactiveFeed", "type": "Float" },
+        { "object_id": "statusReactiveFeed", "name": "statusReactiveFeed", "type": "Boolean" }
+      ]
+    }
+  ]
+}
+
+### iot agent json - register new device LOAD10000000001
+
+
+POST http://localhost:4041/iot/devices HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+{
+  "devices": [
+    {
+      "device_id": "LOAD10000000001",
+      "entity_name": "urn:ngsi-ld:energy-meter:LOAD10000000001",
+      "entity_type": "energy-meter",
+      "apikey": "energyApiKey",
+      "transport": "HTTP",
+      "timezone": "Europe/Berlin"
+    }
+  ]
+}
+
+### iot agent json - get services
+
+
+GET http://localhost:4041/iot/services
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### iot agent json - get devices
+
+
+GET http://localhost:4041/iot/devices
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### scorpio context broker - Create Subscription
+
+POST http://localhost:9090/ngsi-ld/v1/subscriptions/ HTTP/1.1
+Content-Type: application/ld+json
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+{
+  "type": "Subscription",
+  "entities": [
+    {
+      "type": "energy-meter"
+    }
+  ],
+  "watchedAttributes": [
+    "meterPoint",
+    "timestamp",
+    "activeConsumption",
+    "statusActiveConsumption",
+    "reactiveConsumption",
+    "statusReactiveConsumption",
+    "activeFeed",
+    "statusActiveFeed",
+    "reactiveFeed",
+    "statusReactiveFeed"
+  ],
+  "notification": {
+    "endpoint": {
+      "uri": "http://quantumleap:8668/v2/notify",
+      "accept": "application/json"
+    },
+    "format": "normalized"
+  },
+  "throttling": 1,
+  "description": "Subscription to monitor changes in temperature and humidity for all devices.",
+  "@context": [
+    "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld"
+  ]
+}
+
+
+### scorpio context broker - Query subscriptions
+
+GET http://localhost:9090/ngsi-ld/v1/subscriptions/ 
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+Accept: application/ld+json
+
+### scorpio context broker - Query entity data for LOAD10000000001
+
+GET http://localhost:9090/ngsi-ld/v1/entities/urn:ngsi-ld:energy-meter:LOAD10000000001 HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Query entities for type devices
+
+GET http://localhost:9090/ngsi-ld/v1/entities?type=energy-meter HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Temporal operation
+
+GET http://localhost:9090/ngsi-ld/v1/temporal/entities/urn:energy-meter:LOAD10000000001?temporalValues=true&timerel=between&timeAt=2024-10-01T00:00:00Z&endTimeAt=2025-10-20T23:59:59Z&attrs=activeFeed,reactiveFeed HTTP/1.1
+Accept: application/ld+json
+Content-Type: application/json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### quantumLeap - Query historic data for device
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:energy-meter:LOAD10000000001 HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+### quantumLeap - Query distoric data for attribute
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:energy-meter:LOAD10000000001/attrs/activeFeed HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+

@@ -1,0 +1,129 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "correctedWindDirection": {
+      "@id": "ngsi-ld:correctedWindDirection",
+      "@type": "Property",
+      "description": "The corrected wind direction.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "event": {
+      "@id": "ngsi-ld:event",
+      "@type": "Property",
+      "description": "The type of this payload.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "humidity": {
+      "@id": "ngsi-ld:humidity",
+      "@type": "Property",
+      "description": "The measured humidity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "precipitationIntensity": {
+      "@id": "ngsi-ld:precipitationIntensity",
+      "@type": "Property",
+      "description": "The measured precipitationIntensity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "pressure": {
+      "@id": "ngsi-ld:pressure",
+      "@type": "Property",
+      "description": "The measured pressure.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:HPA"
+      }
+    },
+    "temperature": {
+      "@id": "ngsi-ld:temperature",
+      "@type": "Property",
+      "description": "The measured temperature.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "windDirection": {
+      "@id": "ngsi-ld:windDirection",
+      "@type": "Property",
+      "description": "The measured windDirection without correction.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:DGR"
+      }
+    },
+    "windSpeed": {
+      "@id": "ngsi-ld:windSpeed",
+      "@type": "Property",
+      "description": "The measured windSpeed.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:MTS"
+      }
+    },
+    "location": {
+      "@id": "ngsi-ld:location",
+      "@type": "GeoProperty",
+      "description": "The geographic location of the entity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:Point"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

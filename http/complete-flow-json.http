@@ -1,0 +1,165 @@
+### iot agent json - Register new service
+
+POST http://localhost:4041/iot/services HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+{
+    "services": [
+    {
+      "apikey": "testApikey",
+      "cbroker": "http://localhost:9090",
+      "entity_type": "froggit-wh-4000-se",
+      "resource": "/iot/json",
+      "attributes": [
+        { "object_id": "temperature", "name": "temperature", "type": "Float" },
+        { "object_id": "humidity", "name": "humidity", "type": "Float" },
+        { "object_id": "pressure", "name": "pressure", "type": "Float" },
+        { "object_id": "rainfall", "name": "rainfall", "type": "Float" }
+      ]
+    }
+  ]
+}
+
+### iot agent json - register new device WS001
+
+
+POST http://localhost:4041/iot/devices HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+{
+  "devices": [
+    {
+      "device_id": "WS001",
+      "entity_name": "urn:ngsi-ld:froggit-wh-4000-se:WS001",
+      "entity_type": "froggit-wh-4000-se", 
+      "transport": "HTTP",
+      "static_attributes": [
+        { "name": "location", "type": "GeoProperty", "value": { "type": "Point", "coordinates": [ 52.508353, 13.413431 ] } }
+      ]
+    }
+  ]
+}
+
+### iot agent json - get services
+
+
+GET http://localhost:4041/iot/services
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### iot agent json - get devices
+
+
+GET http://localhost:4041/iot/devices
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### scorpio context broker - Create Subscription
+
+POST http://localhost:9090/ngsi-ld/v1/subscriptions/ HTTP/1.1
+Content-Type: application/ld+json
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+{
+  "type": "Subscription",
+  "entities": [
+    {
+      "type": "froggit-wh-4000-se"
+    }
+  ],
+  "watchedAttributes": [
+    "temperature",
+    "humidity"
+  ],
+  "notification": {
+    "endpoint": {
+      "uri": "http://quantumleap:8668/v2/notify",
+      "accept": "application/json"
+    },
+    "format": "normalized"
+  },
+  "throttling": 1,
+  "description": "Subscription to monitor changes in temperature and humidity for all devices.",
+  "@context": [
+    "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld"
+  ]
+}
+
+
+### scorpio context broker - Query subscriptions
+
+GET http://localhost:9090/ngsi-ld/v1/subscriptions/ 
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+Accept: application/ld+json
+
+### Data mock - Send sensor data for device WS001
+
+POST http://localhost:7896/iot/json?k=testApikey&i=WS001 HTTP/1.1
+Content-Type: application/json
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+{
+  "temperature": 23.4,
+  "humidity": 65,
+  "pressure": 1013,
+  "rainfall": 0.5
+}
+
+
+### scorpio context broker - Query entity data for WS001
+
+GET http://localhost:9090/ngsi-ld/v1/entities/urn:ngsi-ld:froggit-wh-4000-se:WS001 HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Query entities for type devices
+
+GET http://localhost:9090/ngsi-ld/v1/entities?type=froggit-wh-4000-se HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Temporal operation
+
+GET http://localhost:9090/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:froggit-wh-4000-se:WS001?temporalValues=true&timerel=between&timeAt=2024-10-01T00:00:00Z&endTimeAt=2025-10-20T23:59:59Z&attrs=indoorTemperature HTTP/1.1
+Accept: application/ld+json
+Content-Type: application/json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### quantumLeap - Query historic data for device
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:froggit-wh-4000-se:WS001 HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+### quantumLeap - Query historic data for attribute
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:froggit-wh-4000-se:WS001/attrs/temperature HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+

@@ -1,0 +1,107 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "address": {
+      "@id": "ngsi-ld:address",
+      "@type": "String",
+      "description": "Address of sensor location"
+    },
+    "levelId": {
+      "@id": "ngsi-ld:levelId",
+      "@type": "String",
+      "description": "Sensor Id"
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "String",
+      "description": "Name of the river the sensor is measuring"
+    },
+    "dateWaterLevel": {
+      "@id": "ngsi-ld:dateWaterLevel",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:DateTime"
+      }
+    },
+    "waterLevel": {
+      "@id": "ngsi-ld:waterLevel",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "waterLevelWarning": {
+      "@id": "ngsi-ld:waterLevelWarning",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Integer"
+      }
+    },
+    "dateDischarge": {
+      "@id": "ngsi-ld:dateDischarge",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:DateTime"
+      }
+    },
+    "discharge": {
+      "@id": "ngsi-ld:discharge",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "dischargeWarningLevel": {
+      "@id": "ngsi-ld:dischargeWarningLevel",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Integer"
+      }
+    },
+    "hasCurrentWaterLevel": {
+      "@id": "ngsi-ld:hasCurrentWaterLevel",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "hasCurrentDischarge": {
+      "@id": "ngsi-ld:hasCurrentDischarge",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "location": {
+      "@id": "ngsi-ld:location",
+      "@type": "GeoProperty",
+      "description": "The geographic location of the entity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:Point"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "indoorTemperature": {
+      "@id": "ngsi-ld:indoorTemperature",
+      "@type": "Property",
+      "description": "The indoor temperature measured in degrees Celsius.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "temperature": {
+      "@id": "ngsi-ld:temperature",
+      "@type": "Property",
+      "description": "The temperature measured in degrees Celsius.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "dewPoint": {
+      "@id": "ngsi-ld:dewPoint",
+      "@type": "Property",
+      "description": "The dew point temperature measured in degrees Celsius.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "windChill": {
+      "@id": "ngsi-ld:windChill",
+      "@type": "Property",
+      "description": "The wind chill temperature measured in degrees Celsius.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "indoorHumidity": {
+      "@id": "ngsi-ld:indoorHumidity",
+      "@type": "Property",
+      "description": "The indoor humidity level in percentage.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "relativeHumidity": {
+      "@id": "ngsi-ld:relativeHumidity",
+      "@type": "Property",
+      "description": "The relative humidity level in percentage.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "windSpeed": {
+      "@id": "ngsi-ld:windSpeed",
+      "@type": "Property",
+      "description": "The wind speed measured in meters per second.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:MTS"
+      }
+    },
+    "gustSpeed": {
+      "@id": "ngsi-ld:gustSpeed",
+      "@type": "Property",
+      "description": "The gust speed measured in meters per second.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:MTS"
+      }
+    },
+    "windDirection": {
+      "@id": "ngsi-ld:windDirection",
+      "@type": "Property",
+      "description": "The wind direction measured in degrees.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:DGR"
+      }
+    },
+    "atmosphericPressure": {
+      "@id": "ngsi-ld:atmosphericPressure",
+      "@type": "Property",
+      "description": "The atmospheric pressure measured in hectopascals (hPa).",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:HPA"
+      }
+    },
+    "location": {
+      "@id": "ngsi-ld:location",
+      "@type": "GeoProperty",
+      "description": "The geographic location of the entity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:Point"
+      }
+    },
+    "dateObserved": {
+      "@id": "ngsi-ld:dateObserved",
+      "@type": "DateTime",
+      "description": "The date and time when the observation was made."
+    },
+    "softwareType": {
+      "@id": "ngsi-ld:softwareType",
+      "@type": "String",
+      "description": "The type of software used."
+    },
+    "barOMin": {
+      "@id": "ngsi-ld:barOMin",
+      "@type": "Property",
+      "description": "The minimum barometric pressure measured in hectopascals (hPa).",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:HPA"
+      }
+    },
+    "precipitation": {
+      "@id": "ngsi-ld:precipitation",
+      "@type": "Property",
+      "description": "The precipitation level measured in millimeters (mm).",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:MMT"
+      }
+    },
+    "dailyRainIn": {
+      "@id": "ngsi-ld:dailyRainIn",
+      "@type": "Property",
+      "description": "The daily rainfall measured in inches.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:INH"
+      }
+    },
+    "weeklyRainIn": {
+      "@id": "ngsi-ld:weeklyRainIn",
+      "@type": "Property",
+      "description": "The weekly rainfall measured in inches.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:INH"
+      }
+    },
+    "monthlyRainIn": {
+      "@id": "ngsi-ld:monthlyRainIn",
+      "@type": "Property",
+      "description": "The monthly rainfall measured in inches.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:INH"
+      }
+    },
+    "yearlyRainIn": {
+      "@id": "ngsi-ld:yearlyRainIn",
+      "@type": "Property",
+      "description": "The yearly rainfall measured in inches.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:INH"
+      }
+    },
+    "solarRadiation": {
+      "@id": "ngsi-ld:solarRadiation",
+      "@type": "Property",
+      "description": "The solar radiation level measured in watts per square meter.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:WMS"
+      }
+    },
+    "uvIndex": {
+      "@id": "ngsi-ld:uvIndex",
+      "@type": "Property",
+      "description": "The UV index level.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "realtime": {
+      "@id": "ngsi-ld:realtime",
+      "@type": "Property",
+      "description": "Indicates if the data is collected in real-time.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "rtFreq": {
+      "@id": "ngsi-ld:rtFreq",
+      "@type": "Property",
+      "description": "The frequency of real-time data collection in seconds.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:SEC"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

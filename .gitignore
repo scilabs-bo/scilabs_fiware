@@ -1,0 +1,18 @@
+# local configuration with credentials
+.env
+!.env.example
+
+# generated certificates and Let's Encrypt storage
+*.pem
+acme.json
+
+# runtime data
+*.log
+*.tar.gz
+node_modules/
+artifacts/
+
+# editor and system files
+.idea/
+.DS_Store
+__pycache__/

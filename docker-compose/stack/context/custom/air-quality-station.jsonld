@@ -1,0 +1,217 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "ambientLight": {
+      "@id": "ngsi-ld:ambientLight",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:LX"
+      }
+    },
+    "atmosphericPressure": {
+      "@id": "ngsi-ld:atmosphericPressure",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:A97"
+      }
+    },
+    "batteryCharge": {
+      "@id": "ngsi-ld:batteryCharge",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:2Z"
+      }
+    },
+    "carbonDioxide": {
+      "@id": "ngsi-ld:carbonDioxide",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:59"
+      }
+    },
+    "deviceStatus": {
+      "@id": "ngsi-ld:deviceStatus",
+      "@type": "String"
+    },
+    "externalTemperature": {
+      "@id": "ngsi-ld:externalTemperature",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "internalTemperature": {
+      "@id": "ngsi-ld:internalTemperature",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "meanSeaLevelPressure": {
+      "@id": "ngsi-ld:meanSeaLevelPressure",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:A97"
+      }
+    },
+    "nitrogenDioxide": {
+      "@id": "ngsi-ld:nitrogenDioxide",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:GQ"
+      }
+    },
+    "ozone": {
+      "@id": "ngsi-ld:ozone",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:GQ"
+      }
+    },
+    "particulateMatter10": {
+      "@id": "ngsi-ld:particulateMatter10",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:GQ"
+      }
+    },
+    "particulateMatter1_0": {
+      "@id": "ngsi-ld:particulateMatter1_0",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:GQ"
+      }
+    },
+    "particulateMatter2_5": {
+      "@id": "ngsi-ld:particulateMatter2_5",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:GQ"
+      }
+    },
+    "relativeHumidity": {
+      "@id": "ngsi-ld:relativeHumidity",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "soundLevel": {
+      "@id": "ngsi-ld:soundLevel",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:2N"
+      }
+    },
+    "timestamp": {
+      "@id": "ngsi-ld:timestamp",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:DateTime"
+      }
+    },
+    "location": {
+      "@id": "ngsi-ld:location",
+      "@type": "GeoProperty",
+      "description": "The geographic location of the entity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:Point"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

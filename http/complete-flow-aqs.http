@@ -1,0 +1,182 @@
+### iot agent json - Register new service for air quality stations
+
+POST http://localhost:4041/iot/services HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+{
+    "services": [
+    {
+      "apikey": "airApiKey",
+      "cbroker": "http://localhost:9090",
+      "entity_type": "air-quality-station",
+      "resource": "/iot/json",
+      "attributes": [
+          {"object_id": "ambientLight", "name": "ambientLight", "type": "Float"},
+          {"object_id": "atmosphericPressure", "name": "atmosphericPressure", "type": "Float"},
+          {"object_id": "batteryCharge", "name": "batteryCharge", "type": "Float"},
+          {"object_id": "carbonDioxide", "name": "carbonDioxide", "type": "Float"},
+          {"object_id": "deviceStatus", "name": "deviceStatus", "type": "String"},
+          {"object_id": "externalTemperature", "name": "externalTemperature", "type": "Float"},
+          {"object_id": "internalTemperature", "name": "internalTemperature", "type": "Float"},
+          {"object_id": "meanSeaLevelPressure", "name": "meanSeaLevelPressure", "type": "Float"},
+          {"object_id": "nitrogenDioxide", "name": "nitrogenDioxide", "type": "Float"},
+          {"object_id": "ozone", "name": "ozone", "type": "Float"},
+          {"object_id": "particulateMatter1_0", "name": "particulateMatter1_0", "type": "Float"},
+          {"object_id": "particulateMatter10", "name": "particulateMatter10", "type": "Float"},
+          {"object_id": "particulateMatter2_5", "name": "particulateMatter2_5", "type": "Float"},
+          {"object_id": "relativeHumidity", "name": "relativeHumidity", "type": "Float"},
+          {"object_id": "soundLevel", "name": "soundLevel", "type": "Float"},
+          {"object_id": "timestamp", "name": "timestamp", "type": "DateTime"}
+      ]
+    }
+  ]
+}
+
+### iot agent json - register new device AQS001
+
+
+POST http://localhost:4041/iot/devices HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+{
+  "devices": [
+    {
+      "device_id": "AQS001",
+      "entity_name": "urn:ngsi-ld:air-quality-station:AQS001",
+      "entity_type": "air-quality-station",
+      "apikey": "airApiKey",
+      "transport": "HTTP",
+      "timezone": "Europe/Berlin",
+      "static_attributes": [
+        {
+          "name": "location",
+          "type": "GeoProperty",
+          "value": {
+            "type": "Point",
+            "coordinates": [52.492353,13.451471]
+          }
+        }
+      ]
+    }
+  ]
+}
+
+### iot agent json - get services
+
+
+GET http://localhost:4041/iot/services
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### iot agent json - get devices
+
+
+GET http://localhost:4041/iot/devices
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### scorpio context broker - Create Subscription
+
+POST http://localhost:9090/ngsi-ld/v1/subscriptions/ HTTP/1.1
+Content-Type: application/ld+json
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+{
+  "type": "Subscription",
+  "entities": [
+    {
+      "type": "air-quality-station"
+    }
+  ],
+  "watchedAttributes": [
+    "carbonDioxide",
+    "nitrogenDioxide"
+  ],
+  "notification": {
+    "endpoint": {
+      "uri": "http://quantumleap:8668/v2/notify",
+      "accept": "application/json"
+    },
+    "format": "normalized"
+  },
+  "throttling": 1,
+  "description": "Subscription to monitor changes in temperature and humidity for all devices.",
+  "@context": [
+    "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld"
+  ]
+}
+
+
+### scorpio context broker - Query subscriptions
+
+GET http://localhost:9090/ngsi-ld/v1/subscriptions/ 
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+Accept: application/ld+json
+
+### Data mock - Send sensor data for device AQS001
+
+POST http://localhost:7896/iot/json?k=airApiKey&i=AQS001 HTTP/1.1
+Content-Type: application/json
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+{
+  "carbonDioxide": 800,
+  "deviceStatus" : "offline",
+  "nitrogenDioxide": 14.971371951703627,
+  "timestamp": "2024-11-08T10:00:00.000Z"
+}
+
+
+### scorpio context broker - Query entity data for AQS001
+
+GET http://localhost:9090/ngsi-ld/v1/entities/urn:ngsi-ld:air-quality-station:AQS001 HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Query entities for type devices
+
+GET http://localhost:9090/ngsi-ld/v1/entities?type=air-quality-station HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Temporal operation
+
+GET http://localhost:9090/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:air-quality-station:AQS001?temporalValues=true&timerel=between&timeAt=2024-10-01T00:00:00Z&endTimeAt=2025-10-20T23:59:59Z&attrs=carbonDioxide HTTP/1.1
+Accept: application/ld+json
+Content-Type: application/json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### quantumLeap - Query historic data for device
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:air-quality-station:AQS001 HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+### quantumLeap - Query distoric data for attribute
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:air-quality-station:AQS001/attrs/carbonDioxide HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /

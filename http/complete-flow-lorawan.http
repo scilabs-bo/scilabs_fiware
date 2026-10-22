@@ -1,0 +1,159 @@
+
+### iot agent ul - Register new device
+
+POST http://localhost:4062/iot/devices HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+{
+    "devices": [
+      {
+        "device_id": "a000000000000004",
+        "entity_name": "urn:ngsi-ld:libelium-weather:W001",
+        "entity_type": "libelium-weather",
+        "timezone": "Europe/Berlin",
+         "attributes": [
+          {"object_id": "correctedWindDirection", "name": "correctedWindDirection", "type": "Number"},
+          {"object_id": "event", "name": "event", "type": "String"},
+          {"object_id": "humidity", "name": "humidity", "type": "Number"},
+          {"object_id": "luminosity", "name": "luminosity", "type": "Number"},
+          {"object_id": "precipitationIntensity", "name": "precipitationIntensity", "type": "Number"},
+          {"object_id": "pressure", "name": "pressure", "type": "Number"},
+          {"object_id": "temperature", "name": "temperature", "type": "Number"},
+          {"object_id": "windDirection", "name": "windDirection", "type": "Number"},
+          {"object_id": "windSpeed", "name": "windSpeed", "type": "Number"}
+        ],
+        "static_attributes": [
+          {
+            "name": "location",
+            "type": "GeoProperty",
+            "value": {
+              "type": "Point",
+              "coordinates": [52.492353,13.451471]
+            }
+          }
+        ],
+        "internal_attributes": {
+            "lorawan": {
+            "application_server": {
+                "host": "eu1.cloud.thethings.network:1883",
+                "username": "'$LORA_WEATHER_APPLICATION_USER'",
+                "password": "'$LORA_WEATHER_APPLICATION_PASSWORD'",
+                "provider": "TTN"
+            },
+            "app_eui": "A000000000000010",
+            "application_id": "weather-app@ttn",
+            "application_key": "00000000000000000000000000000000",
+            "data_model": "application_server"
+        }
+      }
+    }
+]}
+
+
+### iot agent ul - get devices
+
+GET http://localhost:4062/iot/devices
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### scorpio context broker - Create Subscription
+
+POST http://localhost:9090/ngsi-ld/v1/subscriptions/ HTTP/1.1
+Content-Type: application/ld+json
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+{
+  "type": "Subscription",
+  "entities": [
+    {
+      "type": "libelium-weather"
+    }
+  ],
+  "watchedAttributes": [
+    "correctedWindDirection",
+    "event",
+    "humidity",
+    "luminosity",
+    "precipitationIntensity",
+    "pressure",
+    "temperature",
+    "windDirection",
+    "windSpeed",
+    "location"
+  ],
+  "notification": {
+    "endpoint": {
+      "uri": "http://quantumleap:8668/v2/notify",
+      "accept": "application/json"
+    },
+    "format": "normalized"
+  },
+  "throttling": 1,
+  "description": "Subscription to monitor changes in all attributes for all devices.",
+  "@context": [
+    "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld"
+  ]
+}
+
+
+### scorpio context broker - Query subscriptions
+
+GET http://localhost:9090/ngsi-ld/v1/subscriptions/ 
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+Accept: application/ld+json
+
+### scorpio context broker - Query entity data for W001
+
+GET http://localhost:9090/ngsi-ld/v1/entities/urn:ngsi-ld:libelium-weather:W001 HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Query entities for type devices
+
+GET http://localhost:9090/ngsi-ld/v1/entities?type=libelium-weather HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### scorpio context broker - Temporal operation
+
+GET http://localhost:9090/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:libelium-weather:W001?temporalValues=true&timerel=between&timeAt=2024-10-01T00:00:00Z&endTimeAt=2025-10-20T23:59:59Z&attrs=correctedWindDirection HTTP/1.1
+Accept: application/ld+json
+Content-Type: application/json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+
+### quantumLeap - Query historic data for device
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:libelium-weather:W001 HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+### quantumLeap - Query historic data for attribute
+
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:libelium-weather:W001/attrs/correctedWindDirection HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+
+
+

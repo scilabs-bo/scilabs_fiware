@@ -1,0 +1,28 @@
+### Get quantumleap version
+
+GET http://localhost:4202/
+    ?ID=1
+    &PASSWORD=testKEY
+    &indoortempf=77.2
+    &tempf=75.6
+    &dewptf=50.9
+    &windchillf=75.6
+    &indoorhumidity=43
+    &humidity=42
+    &windspeedmph=0.0
+    &windgustmph=0.0
+    &winddir=137
+    &absbaromin=29.419
+    &baromin=29.419
+    &rainin=0.000
+    &dailyrainin=0.012
+    &weeklyrainin=0.012
+    &monthlyrainin=0.012
+    &yearlyrainin=0.012
+    &solarradiation=12.97
+    &UV=0
+    &dateutc=2024-08-22%2012:37:52
+    &softwaretype=EasyWeatherV1.6.9
+    &action=updateraw
+    &realtime=1
+    &rtfreq=5 HTTP/1.1 HTTP/1.1

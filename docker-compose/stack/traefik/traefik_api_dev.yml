@@ -1,0 +1,95 @@
+tls:
+  certificates:
+    - certFile: "/traefik/certs/portainer.localhost.pem"
+      keyFile: "/traefik/certs/portainer.localhost-key.pem"
+    - certFile: "/traefik/certs/grafana.localhost.pem"
+      keyFile: "/traefik/certs/grafana.localhost-key.pem"
+    - certFile: "/traefik/certs/traefik.localhost.pem"
+      keyFile: "/traefik/certs/traefik.localhost-key.pem"
+    - certFile: "/traefik/certs/nodered.localhost.pem"
+      keyFile: "/traefik/certs/nodered.localhost-key.pem"
+    - certFile: "/traefik/certs/prometheus.localhost.pem"
+      keyFile: "/traefik/certs/prometheus.localhost-key.pem"
+    - certFile: "/traefik/certs/pgadmin.localhost.pem"
+      keyFile: "/traefik/certs/pgadmin.localhost-key.pem"
+    - certFile: "/traefik/certs/mongodb.localhost.pem"
+      keyFile: "/traefik/certs/mongodb.localhost-key.pem"
+    - certFile: "/traefik/certs/krakenD.localhost.pem"
+      keyFile: "/traefik/certs/krakenD.localhost-key.pem"
+    - certFile: "/traefik/certs/alertmanager.localhost.pem"
+      keyFile: "/traefik/certs/alertmanager.localhost-key.pem"
+
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/traefik/certs/localhost.pem"
+        keyFile: "/traefik/certs/localhost-key.pem"
+
+http:
+  middlewares:
+    simpleAuth:
+      basicAuth:
+        users:
+          - '{{ env "TRAEFIK_BASIC_AUTH" }}'
+    redirectToHttps:
+      redirectScheme:
+        scheme: https
+        permanent: true
+        port: "443"
+    redirectToHttp:
+      redirectScheme:
+        scheme: http
+        permanent: true
+        port: "80"
+
+  routers:
+    api:
+      rule: Host(`traefik.localhost`)
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - simpleAuth
+      service: api@internal
+      tls: true
+
+    noderedHttp:
+      rule: Host(`nr.localhost`)
+      entrypoints:
+        - web
+        - websecure
+      service: nodered@docker
+      middlewares:
+        - redirectToHttp
+      tls: false
+
+    redirectNR:
+      rule: Host(`nr.localhost`)
+      entrypoints:
+        - websecure
+      middlewares:
+        - redirectToHttp
+      service: noop@internal
+      tls: true
+
+    noderedHttps:
+      rule: Host(`nodered.localhost`)
+      entrypoints:
+        - web
+        - websecure
+      service: nodered@docker
+      middlewares:
+        - redirectToHttps
+      tls: true
+
+    redirectAllExceptNodeRed:
+      rule: HostRegexp(`^.+\.localhost`)  && !Host(`nr.localhost`)
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - redirectToHttps
+      service: noop@internal
+      tls: false
+
+

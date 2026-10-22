@@ -1,0 +1,177 @@
+
+### iot agent ul - Register new service
+
+POST http://localhost:4061/iot/services HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /ClimateQuarter
+
+{
+  "services": [
+    {
+      "apikey": "example-api-key",
+      "cbroker": "http://localhost:9090",
+      "entity_type": "climate-quarter-house",
+      "resource": "/iot/ul",
+      "attributes": [
+        { "object_id": "logvar.di_p_haus", "name": "powerHouseConsumption", "type": "Float" },
+        { "object_id": "logvar.di_p_netz", "name": "powerGrid", "type": "Float" },
+        { "object_id": "logvar.di_p_solar", "name": "powerPV", "type": "Float" },
+        { "object_id": "logvar.di_p_batt_dc", "name": "batteryPowerDC", "type": "Float" },
+        { "object_id": "logvar.di_p_bat_ac", "name": "batteryPowerAC", "type": "Float" },
+        { "object_id": "logvar.di_p_batt_soc", "name": "batteryStateOfCharge", "type": "Float" }
+      ]
+    }
+  ]
+}
+
+
+### iot agent ul - register new device cqHouse01
+
+
+POST http://localhost:4061/iot/devices HTTP/1.1
+Content-Type: application/json
+fiware-service: smartcity
+fiware-servicepath: /ClimateQuarter
+
+{
+  "devices": [
+    {
+      "device_id": "cqHouse01",
+      "entity_name": "urn:ngsi-ld:climate-quarter-house:cqHouse01",
+      "entity_type": "climate-quarter-house",
+      "apikey": "example-api-key",
+      "transport": "MQTT",
+      "timezone": "Europe/Berlin",
+      "attributes": []
+    }
+  ]
+}
+
+### iot agent ul - get services for miniature climate-quarter-house
+
+
+GET http://localhost:4061/iot/services
+fiware-service: smartcity
+fiware-servicepath: /MiniatureHouse
+
+### iot agent ul - get services for miniature climate-quarter-house
+
+
+GET http://localhost:4061/iot/services
+fiware-service: smartcity
+fiware-servicepath: /ClimateQuarter
+
+
+### iot agent ul - get devices for ClimateQuarter
+
+
+GET http://localhost:4061/iot/devices
+fiware-service: smartcity
+fiware-servicepath: /ClimateQuarter
+
+### iot agent ul - get devices for MiniatureHouse
+
+
+GET http://localhost:4061/iot/devices
+fiware-service: smartcity
+fiware-servicepath: /MiniatureHouse
+
+
+### scorpio context broker - Create Subscription
+
+POST http://localhost:9090/ngsi-ld/v1/subscriptions/ HTTP/1.1
+Content-Type: application/ld+json
+NGSILD-Tenant: smartcity
+NGSILD-Path: /ClimateQuarter
+
+{
+  "type": "Subscription",
+  "entities": [
+    {
+      "type": "climate-quarter-house"
+    }
+  ],
+  "watchedAttributes": [
+    "powerHouseConsumption",
+    "powerGrid"
+  ],
+  "notification": {
+    "attributes": [
+      "powerHouseConsumption",
+      "powerGrid"
+    ],
+    "endpoint": {
+      "uri": "http://quantumleap:8668/v2/notify",
+      "accept": "application/json"
+    },
+    "format": "normalized"
+  },
+  "throttling": 1,
+  "description": "Subscription to monitor changes in powerHouseConsumption and powerGrid for all devices.",
+  "@context": [
+    "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld"
+  ]
+}
+
+### scorpio context broker - Query subscriptions
+
+GET http://localhost:9090/ngsi-ld/v1/subscriptions/
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+Accept: application/ld+json
+
+### Data mock - Send sensor data for device cqHouse01
+
+POST http://localhost:7897/iot/ul?k=example-api-key&i=cqHouse01 HTTP/1.1
+Content-Type: text/plain
+NGSILD-Tenant: smartcity
+NGSILD-Path: /ClimateQuarter
+
+logvar.di_p_haus|12|logvar.di_p_netz|333|logvar.di_p_solar|300|logvar.di_p_batt_dc|80|logvar.di_p_bat_ac|22.5|logvar.di_p_batt_soc|2000
+
+
+### scorpio context broker - Query entity data for cqHouse01
+
+GET http://localhost:9090/ngsi-ld/v1/entities/urn:ngsi-ld:climate-quarter-house:cqHouse01 HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /ClimateQuarter
+
+
+### scorpio context broker - Query entities for type climate-quarter-house
+
+GET http://localhost:9090/ngsi-ld/v1/entities?type=climate-quarter-house HTTP/1.1
+Accept: application/ld+json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /ClimateQuarter
+
+
+### scorpio context broker - Temporal operation
+
+GET http://localhost:9090/ngsi-ld/v1/temporal/entities/urn:ngsi-ld:climate-quarter-house:cqHouse01?temporalValues=true&timerel=between&timeAt=2024-10-01T00:00:00Z&endTimeAt=2025-10-20T23:59:59Z&attrs=powerHouseConsumption HTTP/1.1
+Accept: application/ld+json
+Content-Type: application/json
+Link: <http://context-hoster/ngsi-ld-core-context-v1.8.jsonld>; rel="http://www.w3.org/ns/json-ld#context"
+NGSILD-Tenant: smartcity
+NGSILD-Path: /ClimateQuarter
+
+
+### quantumLeap - Query historic data for device
+#FIWARE SERVICE PATH IGNORED BY CONTEXT BROKER
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:climate-quarter-house:cqHouse01 HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+
+### quantumLeap - Query historic data for attribute
+#FIWARE SERVICE PATH IGNORED BY CONTEXT BROKER
+GET http://localhost:8668/v2/entities/urn:ngsi-ld:climate-quarter-house:cqHouse01/attrs/powerHouseConsumption HTTP/1.1
+Accept: application/json
+fiware-service: smartcity
+fiware-servicepath: /

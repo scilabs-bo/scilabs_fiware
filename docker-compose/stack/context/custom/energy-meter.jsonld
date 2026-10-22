@@ -1,0 +1,120 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "meterPoint": {
+      "@id": "ngsi-ld:meterPoint",
+      "@type": "String"
+    },
+    "timestamp": {
+      "@id": "ngsi-ld:timestamp",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:DateTime"
+      }
+    },
+    "activeConsumption": {
+      "@id": "ngsi-ld:activeConsumption",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:KWH"
+      }
+    },
+    "statusActiveConsumption": {
+      "@id": "ngsi-ld:statusActiveConsumption",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "reactiveConsumption": {
+      "@id": "ngsi-ld:reactiveConsumption",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:KVR"
+      }
+    },
+    "statusReactiveConsumption": {
+      "@id": "ngsi-ld:statusReactiveConsumption",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "activeFeed": {
+      "@id": "ngsi-ld:activeFeed",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:KWH"
+      }
+    },
+    "statusActiveFeed": {
+      "@id": "ngsi-ld:statusActiveFeed",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "reactiveFeed": {
+      "@id": "ngsi-ld:reactiveFeed",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:KVR"
+      }
+    },
+    "statusReactiveFeed": {
+      "@id": "ngsi-ld:statusReactiveFeed",
+      "@type": "Property",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

@@ -1,0 +1,613 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 5,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P052245A3190431CB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "Ja": {
+                  "color": "dark-red",
+                  "index": 2
+                },
+                "Nein": {
+                  "color": "dark-green",
+                  "index": 3
+                },
+                "false": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "Nein"
+                },
+                "true": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Ja"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "type": "osm-standard"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": false,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "showLegend": false,
+              "style": {
+                "color": {
+                  "field": "Besetzt",
+                  "fixed": "dark-blue"
+                },
+                "opacity": 0.4,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "clamped"
+                },
+                "size": {
+                  "fixed": 30,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/unicons/parking-circle.svg",
+                  "mode": "fixed"
+                },
+                "symbolAlign": {
+                  "horizontal": "center",
+                  "vertical": "center"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "location": {
+              "latitude": "latitude",
+              "longitude": "longitude",
+              "mode": "coords"
+            },
+            "name": "Layer 1",
+            "tooltip": true,
+            "type": "markers"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "coords",
+          "lat": 52.52,
+          "lon": 13.405,
+          "zoom": 17
+        }
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT ON (entity_id)\n  ST_X(location) AS latitude,\n  ST_Y(location) AS longitude,\n  occupied,\n  entity_id,\n  name,\n  time_index as \"Letzer Datenpunkt\"\nFROM \"mtsmartcity\".\"etdo300-parking-barrier\"\nWHERE \"name\" in ($Barriere)\nOrder by entity_id, time_index DESC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Übersicht",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "occupied",
+            "renamePattern": "Besetzt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "latitude",
+            "renamePattern": "Höhengrad"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "longitude",
+            "renamePattern": "Breitengrad"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "entity_id",
+            "renamePattern": "ID"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "name",
+            "renamePattern": "Name"
+          }
+        }
+      ],
+      "type": "geomap"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 4,
+      "panels": [],
+      "repeat": "Barriere",
+      "title": "Steuerung: $Barriere",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P052245A3190431CB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Frei"
+                },
+                "true": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Besetzt"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 0,
+        "y": 22
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^occupied$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P052245A3190431CB"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT occupied \nfrom mtsmartcity.\"etdo300-parking-barrier\" \nWHERE \"name\" IN ( $Barriere )\norder by time_index desc\nlimit 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Parkplatzzustand",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P052245A3190431CB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 20,
+        "x": 4,
+        "y": 22
+      },
+      "id": 2,
+      "options": {
+        "infinitePan": false,
+        "inlineEditing": false,
+        "panZoom": false,
+        "root": {
+          "background": {
+            "color": {
+              "fixed": "transparent"
+            }
+          },
+          "border": {
+            "color": {
+              "fixed": "dark-green"
+            }
+          },
+          "constraint": {
+            "horizontal": "left",
+            "vertical": "top"
+          },
+          "elements": [
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "align": "center",
+                "api": {
+                  "contentType": "application/json",
+                  "data": "{}",
+                  "endpoint": "https://nodered.example.com/parking-barrier/up",
+                  "headerParams": [],
+                  "method": "GET",
+                  "queryParams": [
+                    [
+                      "deviceId",
+                      "${DeviceId}"
+                    ]
+                  ]
+                },
+                "color": {
+                  "fixed": "#F0F4FD"
+                },
+                "size": 14,
+                "style": {
+                  "variant": "destructive"
+                },
+                "text": {
+                  "fixed": "Schließen",
+                  "mode": "fixed"
+                }
+              },
+              "connections": [],
+              "constraint": {
+                "horizontal": "left",
+                "vertical": "top"
+              },
+              "name": "Up",
+              "oneClickMode": "off",
+              "placement": {
+                "height": 120,
+                "left": 120,
+                "rotation": 0,
+                "top": 60,
+                "width": 440
+              },
+              "type": "button"
+            },
+            {
+              "background": {
+                "color": {
+                  "fixed": "transparent"
+                }
+              },
+              "border": {
+                "color": {
+                  "fixed": "dark-green"
+                }
+              },
+              "config": {
+                "align": "center",
+                "api": {
+                  "contentType": "application/json",
+                  "data": "{}",
+                  "endpoint": "https://nodered.example.com/parking-barrier/down",
+                  "headerParams": [],
+                  "method": "GET",
+                  "queryParams": [
+                    [
+                      "deviceId",
+                      "${DeviceId}"
+                    ]
+                  ]
+                },
+                "color": {
+                  "fixed": "#F0F4FD"
+                },
+                "size": 14,
+                "style": {
+                  "variant": "success"
+                },
+                "text": {
+                  "fixed": "Öffnen",
+                  "mode": "fixed"
+                }
+              },
+              "connections": [],
+              "constraint": {
+                "horizontal": "right",
+                "vertical": "top"
+              },
+              "name": "Down",
+              "oneClickMode": "off",
+              "placement": {
+                "height": 120,
+                "right": 120,
+                "rotation": 0,
+                "top": 60,
+                "width": 440
+              },
+              "type": "button"
+            }
+          ],
+          "name": "Element 1731317503599",
+          "oneClickMode": "off",
+          "placement": {
+            "height": 100,
+            "left": 0,
+            "rotation": 0,
+            "top": 0,
+            "width": 100
+          },
+          "type": "frame"
+        },
+        "showAdvancedTypes": true
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P052245A3190431CB"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT ON(deviceid)\ndeviceid \nFROM \"etdo300-parking-barrier\" \nWHERE \"name\" IN ( $Barriere )",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Steuerung",
+      "type": "canvas"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "urn:ngsi-ld:do300-parking-barrier:PB001",
+          "value": "urn:ngsi-ld:do300-parking-barrier:PB001"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "P052245A3190431CB"
+        },
+        "definition": "SELECT DISTINCT ON(name) name from \"etdo300-parking-barrier\" WHERE \"inactive\" = 'false';",
+        "includeAll": true,
+        "label": "Barriere",
+        "multi": true,
+        "name": "Barriere",
+        "options": [],
+        "query": "SELECT DISTINCT ON(name) name from \"etdo300-parking-barrier\" WHERE \"inactive\" = 'false';",
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "a000000000000005",
+          "value": "a000000000000005"
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "P052245A3190431CB"
+        },
+        "definition": "SELECT DISTINCT(deviceid) from \"etdo300-parking-barrier\"  WHERE \"name\" in ($Barriere)",
+        "hide": 2,
+        "includeAll": false,
+        "label": "DeviceId",
+        "name": "DeviceId",
+        "options": [],
+        "query": "SELECT DISTINCT(deviceid) from \"etdo300-parking-barrier\"  WHERE \"name\" in ($Barriere)",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "browser",
+  "title": "Parkbarrieren",
+  "uid": "ce3lzua1zbta8b",
+  "version": 3,
+  "weekStart": ""
+}

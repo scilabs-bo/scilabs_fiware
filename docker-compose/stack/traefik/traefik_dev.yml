@@ -1,0 +1,28 @@
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  le:
+    acme:
+      # address for Let's Encrypt notifications, replace before the first start
+      email: "admin@example.com"
+      storage: "/traefik/acme.json"
+      tlsChallenge: {}
+
+
+providers:
+  docker:
+    network: smart_city_external
+    watch: true
+    exposedByDefault: false
+
+  file:
+    filename: /traefik/traefik_api_dev.yml
+    watch: true

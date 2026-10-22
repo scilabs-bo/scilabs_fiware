@@ -1,0 +1,104 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+    "Attribute": "ngsi-ld:Attribute",
+    "Property": "ngsi-ld:Property",
+    "GeoProperty": "ngsi-ld:GeoProperty",
+    "DateTime": "ngsi-ld:DateTime",
+    "String": "ngsi-ld:String",
+    "locked": {
+      "@id": "ngsi-ld:locked",
+      "@type": "Property",
+      "description": "Is this parking barrier locked.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "online": {
+      "@id": "ngsi-ld:online",
+      "@type": "Property",
+      "description": "Is this parking barrier online.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "occupied": {
+      "@id": "ngsi-ld:online",
+      "@type": "Property",
+      "description": "Is this parking barrier online.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    },
+    "voltage": {
+      "@id": "ngsi-ld:voltage",
+      "@type": "Property",
+      "description": "Voltage at the parking barrier.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:VLT"
+      }
+    },
+    "batteryCapacity": {
+      "@id": "ngsi-ld:batteryCapacity",
+      "@type": "Property",
+      "description": "Battery capacity of the parking barrier.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:P1"
+      }
+    },
+    "location": {
+      "@id": "ngsi-ld:location",
+      "@type": "GeoProperty",
+      "description": "The geographic location of the entity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:Point"
+      }
+    },
+    "deviceId": {
+      "@id": "ngsi-ld:deviceId",
+      "@type": "GeoProperty",
+      "description": "The device id of the parking barrier.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:String"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

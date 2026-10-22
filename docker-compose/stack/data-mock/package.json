@@ -1,0 +1,14 @@
+{
+  "name": "http-mock",
+  "scripts": {
+    "start": "ts-node mock.ts"
+  },
+  "dependencies": {
+    "axios": "1.7.4",
+    "ts-node": "10.9.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "20.1.4",
+    "@types/node": "20.14.15"
+  }
+}

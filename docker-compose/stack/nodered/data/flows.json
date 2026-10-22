@@ -1,0 +1,962 @@
+[
+    {
+        "id": "aa2d9d09e0e670ef",
+        "type": "tab",
+        "label": "Weatherstation",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e638c5ef3d959148",
+        "type": "tab",
+        "label": "Water levels",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "58da34ad53e065ee",
+        "type": "tab",
+        "label": "Klimaviertel",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "586d6740d3e8f592",
+        "type": "tab",
+        "label": "Load profile data",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d13e39609d552d53",
+        "type": "tab",
+        "label": "Parking Barrier",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5024b1470168390d",
+        "type": "tab",
+        "label": "Air Quality Station",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1b689dbae8ffa408",
+        "type": "tab",
+        "label": "Miniture house",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "666f2cfe495771ec",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "5afb13261b305439",
+        "type": "mqtt-broker",
+        "name": "MQTT Server CONNECTION",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "3",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "e9ae19119d4bd9db",
+        "type": "mqtt-broker",
+        "name": "Climate Quarter MQTT Server",
+        "broker": "${CLIMATE_QUARTER_MQTT_URL}",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d743de38700fe770",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mosquitto-mqtt",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "5ffa09752c0258d8",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.4.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d6c7f0851c33ee67",
+        "type": "http in",
+        "z": "aa2d9d09e0e670ef",
+        "name": "",
+        "url": "/wunderground",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 320,
+        "wires": [
+            [
+                "97840781ae6b03e7"
+            ]
+        ]
+    },
+    {
+        "id": "380e2219c634fe2f",
+        "type": "http response",
+        "z": "aa2d9d09e0e670ef",
+        "name": "Reponse",
+        "statusCode": "",
+        "headers": {},
+        "x": 960,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "6a31d9de6549e151",
+        "type": "http request",
+        "z": "aa2d9d09e0e670ef",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 750,
+        "y": 320,
+        "wires": [
+            [
+                "380e2219c634fe2f"
+            ]
+        ]
+    },
+    {
+        "id": "97840781ae6b03e7",
+        "type": "function",
+        "z": "aa2d9d09e0e670ef",
+        "name": "Data property post ",
+        "func": "let params = msg.req.query;\nlet host = env.get(\"IOT_AGENT_PROPERTY_POST_URL\");\n\nmsg.url = `${host}?i=${params.ID}&k=${params.PASSWORD}`;\ndelete params.ID;\ndelete params.PASSWORD;\nmsg.payload = params;\n\nmsg.headers = {\n    'Connection': 'Close'\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 320,
+        "wires": [
+            [
+                "6a31d9de6549e151"
+            ]
+        ]
+    },
+    {
+        "id": "bf6815d6745feca2",
+        "type": "inject",
+        "z": "e638c5ef3d959148",
+        "name": "Trigger",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "cadbe1a591be48a2"
+            ]
+        ]
+    },
+    {
+        "id": "cadbe1a591be48a2",
+        "type": "http request",
+        "z": "e638c5ef3d959148",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://pegel.eglv.de/gauges/",
+        "tls": "666f2cfe495771ec",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "0ddd7aa58f7694b3"
+            ]
+        ]
+    },
+    {
+        "id": "e58498fe0eb98125",
+        "type": "debug",
+        "z": "e638c5ef3d959148",
+        "name": "debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "121e0b8591f0d227",
+        "type": "function",
+        "z": "e638c5ef3d959148",
+        "name": "filter and convert data",
+        "func": "const UtmLatLng = global.get('utmLatLng');\nconst utm = new UtmLatLng();\n\nlet validNumbers = [\"10030\", \"10097\", \"10109\"];\nlet host = env.get(\"IOT_AGENT_PROPERTY_POST_URL\");\n\nif (!validNumbers.includes(msg.payload[\"Pegel-Nummer\"])){\n    return null;\n}\n\nlet coords = utm.convertUtmToLatLng(msg.payload.Rechtswert, msg.payload.Hochwert, 32, \"N\");\n\nlet convertedData = {\n    address: msg.payload.Name,\n    levelId: msg.payload[\"Pegel-Nummer\"],\n    name: msg.payload.Fluss,\n    location: {\n        type: \"Point\",\n        coordinates: [coords.lat, coords.lng]\n    },\n    dateWaterLevel: msg.payload.latest_waterlevel.Datum,\n    waterLevel: msg.payload.latest_waterlevel.Wert,\n    waterLevelWarning: msg.payload.latest_waterlevel[\"Aktuelle Warnstufe\"],\n    dateDischarge: msg.payload.latest_discharge.Datum,\n    discharge: msg.payload.latest_discharge.Wert,\n    dischargeWarningLevel: msg.payload.latest_discharge[\"Aktuelle Warnstufe\"] ?? -1,\n    hasCurrentWaterLevel : msg.payload.has_current_waterlevel,\n    hasCurrentDischarge: msg.payload.has_current_discharge\n};\n\nif (!msg.payload.has_current_discharge){\n    convertedData.dateDischarge = undefined;\n    convertedData.discharge = undefined;\n    convertedData.dischargeWarningLevel = undefined;\n}\n\nif (!msg.payload.has_current_waterlevel) {\n    convertedData.dateWaterLevel = undefined;\n    convertedData.waterLevel = undefined;\n    convertedData.waterLevelWarning = undefined;\n}\n\nmsg.payload = convertedData;\nmsg.url = `${host}?i=LEVEL${convertedData.levelId}&k=waterLevelApiKey`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 120,
+        "wires": [
+            [
+                "b7667ba26627123e"
+            ]
+        ]
+    },
+    {
+        "id": "b7667ba26627123e",
+        "type": "http request",
+        "z": "e638c5ef3d959148",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1090,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0ddd7aa58f7694b3",
+        "type": "split",
+        "z": "e638c5ef3d959148",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 570,
+        "y": 120,
+        "wires": [
+            [
+                "121e0b8591f0d227"
+            ]
+        ]
+    },
+    {
+        "id": "7a82078a1919370a",
+        "type": "mqtt in",
+        "z": "58da34ad53e065ee",
+        "name": "Subscribe Klimaviertel",
+        "topic": "#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "e9ae19119d4bd9db",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 420,
+        "y": 260,
+        "wires": [
+            [
+                "1d8cea5f89ed547d",
+                "5d50fe512c95e3b6"
+            ]
+        ]
+    },
+    {
+        "id": "1d8cea5f89ed547d",
+        "type": "mqtt out",
+        "z": "58da34ad53e065ee",
+        "name": "Publish Klimaviertel Data",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d743de38700fe770",
+        "x": 830,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "5d50fe512c95e3b6",
+        "type": "debug",
+        "z": "58da34ad53e065ee",
+        "name": "Print Klimaviertel Data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "d46bf95619067d5a",
+        "type": "e-mail in",
+        "z": "586d6740d3e8f592",
+        "name": "",
+        "protocol": "IMAP",
+        "server": "${EMAIL_HOST}",
+        "useSSL": true,
+        "autotls": "never",
+        "port": "993",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "box": "INBOX",
+        "disposition": "Read",
+        "criteria": "UNSEEN",
+        "repeat": "300",
+        "fetch": "auto",
+        "inputs": 0,
+        "x": 190,
+        "y": 260,
+        "wires": [
+            [
+                "5177c2e8f1d9e23b",
+                "e70b1bd6f07da21f"
+            ]
+        ]
+    },
+    {
+        "id": "11184efc52df43f6",
+        "type": "function",
+        "z": "586d6740d3e8f592",
+        "name": "Transform data",
+        "func": "const host = env.get(\"IOT_AGENT_PROPERTY_POST_URL\");\n\nfunction setBooleanFlag(value) {\n    return value === 'Wert ist gültig';\n}\n\nfunction transformDate(date, time) {\n    const isoDate = date.split('.').reverse().join('-');\n    return new Date(`${isoDate}T${time}`).toISOString();\n}\n\n\nlet parsedData = [];\n\n\n\nlet lines = msg.payload.split(\"\\n\");\nlet meterPoint = lines[2].split(\":\")[1].trim();\n\nlines = lines.slice(10);\n\nfor (const line of lines) {\n    let fields = line.split(\";\");\n\n    if (fields.length < 10) continue;\n\n    let timestamp = transformDate(fields[0].trim(), fields[1].trim());\n\n    parsedData.push({\n        meterPoint,\n        timestamp,\n        activeConsumption: parseFloat(fields[2].replace(\",\", \".\")),\n        statusActiveConsumption: setBooleanFlag(fields[3].trim()),\n        reactiveConsumption: parseFloat(fields[4].replace(\",\", \".\")),\n        statusReactiveConsumption: setBooleanFlag(fields[5].trim()),\n        activeFeed: parseFloat(fields[6].replace(\",\", \".\")),\n        statusActiveFeed: setBooleanFlag(fields[7].trim()),\n        reactiveFeed: parseFloat(fields[8].replace(\",\", \".\")),\n        statusReactiveFeed: setBooleanFlag(fields[9].trim())\n    });\n}\n    \nmsg.url = `${host}?i=LOAD${meterPoint}&k=energyApiKey`;    \nmsg.payload = parsedData;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 260,
+        "wires": [
+            [
+                "9e10a20f8809c996",
+                "51f104d81da6d214"
+            ]
+        ]
+    },
+    {
+        "id": "51f104d81da6d214",
+        "type": "http request",
+        "z": "586d6740d3e8f592",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1370,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9e10a20f8809c996",
+        "type": "debug",
+        "z": "586d6740d3e8f592",
+        "name": "transform",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1360,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "5177c2e8f1d9e23b",
+        "type": "switch",
+        "z": "586d6740d3e8f592",
+        "name": "",
+        "property": "attachments",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 390,
+        "y": 260,
+        "wires": [
+            [
+                "0612c64884394a8b"
+            ]
+        ]
+    },
+    {
+        "id": "0612c64884394a8b",
+        "type": "function",
+        "z": "586d6740d3e8f592",
+        "name": "Filter attachments",
+        "func": "if (msg.attachments[0].contentType !== \"text/csv\") return;\n\nmsg.payload = msg.attachments[0].content;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 260,
+        "wires": [
+            [
+                "e5712d20be56c799"
+            ]
+        ]
+    },
+    {
+        "id": "e5712d20be56c799",
+        "type": "converter",
+        "z": "586d6740d3e8f592",
+        "name": "Convert",
+        "from": "UTF-16BE",
+        "x": 880,
+        "y": 260,
+        "wires": [
+            [
+                "11184efc52df43f6"
+            ]
+        ]
+    },
+    {
+        "id": "e70b1bd6f07da21f",
+        "type": "debug",
+        "z": "586d6740d3e8f592",
+        "name": "mail",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "703deb70582d3382",
+        "type": "http in",
+        "z": "d13e39609d552d53",
+        "name": "",
+        "url": "/parking-barrier/down",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 160,
+        "wires": [
+            [
+                "d7a7ce3ab99c45bb",
+                "d818fc56e9e37935",
+                "a26f6f27043d8978"
+            ]
+        ]
+    },
+    {
+        "id": "40f1dc30fe52b9ec",
+        "type": "http in",
+        "z": "d13e39609d552d53",
+        "name": "",
+        "url": "/parking-barrier/up",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 420,
+        "wires": [
+            [
+                "54a9dc4c7ce4d18a",
+                "83966764596639a9",
+                "a26f6f27043d8978"
+            ]
+        ]
+    },
+    {
+        "id": "d7a7ce3ab99c45bb",
+        "type": "debug",
+        "z": "d13e39609d552d53",
+        "name": "Debug down command",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "54a9dc4c7ce4d18a",
+        "type": "debug",
+        "z": "d13e39609d552d53",
+        "name": "Debug up payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "6838e062cb6d85c4",
+        "type": "mqtt out",
+        "z": "d13e39609d552d53",
+        "name": "Device Downlink",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5afb13261b305439",
+        "x": 1020,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "d818fc56e9e37935",
+        "type": "function",
+        "z": "d13e39609d552d53",
+        "name": "Create down payload",
+        "func": "\nmsg.topic = \"v3/\" + env.get(\"PARKING_BARRIER_MQTT_USER\") + \"/devices/\" + msg.payload.deviceId + \"/down/replace\";\n\nmsg.payload = {\n  \"downlinks\": [{\n    \"f_port\": 1,\n    \"frm_payload\": \"AwAFAEcfQQA=\",\n    \"priority\": \"NORMAL\"\n  }]\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 160,
+        "wires": [
+            [
+                "6838e062cb6d85c4",
+                "d7a7ce3ab99c45bb"
+            ]
+        ]
+    },
+    {
+        "id": "83966764596639a9",
+        "type": "function",
+        "z": "d13e39609d552d53",
+        "name": "Create up payload",
+        "func": "\nmsg.topic = \"v3/\" + env.get(\"PARKING_BARRIER_MQTT_USER\") + \"/devices/\" + msg.payload.deviceId + \"/down/replace\";\n\nmsg.payload = {\n    \"downlinks\": [{\n        \"f_port\": 1,\n        \"frm_payload\": \"AwAFAEcfQQE=\",\n        \"priority\": \"NORMAL\"\n    }]\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 420,
+        "wires": [
+            [
+                "6838e062cb6d85c4",
+                "54a9dc4c7ce4d18a"
+            ]
+        ]
+    },
+    {
+        "id": "a26f6f27043d8978",
+        "type": "http response",
+        "z": "d13e39609d552d53",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 490,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "c1aad316331793ad",
+        "type": "debug",
+        "z": "5024b1470168390d",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "72e420b4151e92e2",
+        "type": "inject",
+        "z": "5024b1470168390d",
+        "name": "",
+        "props": [],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "b26ea26c786d32f9"
+            ]
+        ]
+    },
+    {
+        "id": "b26ea26c786d32f9",
+        "type": "function",
+        "z": "5024b1470168390d",
+        "name": "Set URL",
+        "func": "const baseUrl = \"https://api.elichens.com/v0/stations/\";\nconst stationId = env.get(\"ELICHENS_STATION_ID\");\nconst apiKey = env.get(\"ELICHENS_API_KEY\");\n\nmsg.url = `${baseUrl}${stationId}?api_key=${apiKey}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "199a68e9b8f15fee"
+            ]
+        ]
+    },
+    {
+        "id": "199a68e9b8f15fee",
+        "type": "http request",
+        "z": "5024b1470168390d",
+        "name": "GET",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 490,
+        "y": 100,
+        "wires": [
+            [
+                "b1f3f1b26caf2309"
+            ]
+        ]
+    },
+    {
+        "id": "b1f3f1b26caf2309",
+        "type": "function",
+        "z": "5024b1470168390d",
+        "name": "Transform",
+        "func": "const host = env.get(\"IOT_AGENT_PROPERTY_POST_URL\");\n\nlet convertedData = {\n    ambientLight: msg.payload.latest_values.lux,\n    atmosphericPressure: msg.payload.latest_values.pressure,\n    batteryCharge: msg.payload.latest_values.battery,\n    carbonDioxide: msg.payload.latest_values.CO2,\n    deviceStatus: msg.payload.status,\n    externalTemperature: msg.payload.latest_values.temperature,\n    internalTemperature: msg.payload.latest_values.temperature_int,\n    meanSeaLevelPressure: msg.payload.latest_values.mslPressure,\n    nitrogenDioxide: msg.payload.latest_values.NO2,\n    ozone: msg.payload.latest_values.O3,\n    particulateMatter1_0: msg.payload.latest_values.PM1_0,\n    particulateMatter10: msg.payload.latest_values.PM10,\n    particulateMatter2_5: msg.payload.latest_values.PM2_5,\n    relativeHumidity: msg.payload.latest_values.humidity,\n    soundLevel: msg.payload.latest_values.dB,\n    timestamp: new Date().toISOString()\n}\n\nmsg.payload = convertedData;\nmsg.url = `${host}?i=AQS001&k=airApiKey`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 100,
+        "wires": [
+            [
+                "c1aad316331793ad",
+                "3bd73d7045f27a98"
+            ]
+        ]
+    },
+    {
+        "id": "3bd73d7045f27a98",
+        "type": "http request",
+        "z": "5024b1470168390d",
+        "name": "POST",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 830,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6cddb2bf4041f06d",
+        "type": "mqtt in",
+        "z": "1b689dbae8ffa408",
+        "name": "Subscribe miniature house",
+        "topic": "#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5ffa09752c0258d8",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 300,
+        "wires": [
+            [
+                "c08862a06eba981c"
+            ]
+        ]
+    },
+    {
+        "id": "949e632993f40b91",
+        "type": "mqtt out",
+        "z": "1b689dbae8ffa408",
+        "name": "Publish Miniature house Data",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d743de38700fe770",
+        "x": 740,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "9db893c17a0848d0",
+        "type": "debug",
+        "z": "1b689dbae8ffa408",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "c08862a06eba981c",
+        "type": "function",
+        "z": "1b689dbae8ffa408",
+        "name": "function 1",
+        "func": "msg.topic = \"/ul\" + msg.topic;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 300,
+        "wires": [
+            [
+                "949e632993f40b91",
+                "9db893c17a0848d0"
+            ]
+        ]
+    }
+]

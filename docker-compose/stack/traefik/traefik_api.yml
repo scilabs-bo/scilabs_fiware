@@ -1,0 +1,67 @@
+http:
+  middlewares:
+    simpleAuth:
+      basicAuth:
+        users:
+          - '{{ env "TRAEFIK_BASIC_AUTH" }}'
+
+    redirectToHttps:
+      redirectScheme:
+        scheme: https
+        permanent: true
+        port: "443"
+    redirectToHttp:
+      redirectScheme:
+        scheme: http
+        permanent: true
+        port: "80"
+
+
+  routers:
+    api:
+      rule: Host(`traefik.{{ env "DOMAIN" }}`)
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - simpleAuth
+      service: api@internal
+      tls:
+        certResolver: le
+
+    nodered-http:
+      rule: Host(`weather.{{ env "DOMAIN" }}`)
+      entrypoints:
+        - web
+        - websecure
+      service: nodered@docker
+      tls: false
+
+    nodered-https:
+      rule: Host(`nodered.{{ env "DOMAIN" }}`)
+      entrypoints:
+        - web
+        - websecure
+      service: nodered@docker
+      tls:
+        certResolver: le
+
+    redirectNR:
+      rule: Host(`weather.{{ env "DOMAIN" }}`)
+      entrypoints:
+        - websecure
+      middlewares:
+        - redirectToHttp
+      service: noop@internal
+      tls:
+        certResolver: le
+
+    redirectAllExceptNodeRed:
+      rule: HostRegexp(`^.+\.{{ env "DOMAIN" | replace "." "\\." }}$`)  && !Host(`weather.{{ env "DOMAIN" }}`)
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - redirectToHttps
+      service: noop@internal
+      tls: false

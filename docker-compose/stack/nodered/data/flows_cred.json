@@ -1,0 +1,18 @@
+{
+  "d46bf95619067d5a": {
+    "userid": "${EMAIL_USER}",
+    "password": "${EMAIL_PASS}"
+  },
+  "e9ae19119d4bd9db": {
+    "user": "${CLIMATE_QUARTER_MQTT_USER}",
+    "password": "${CLIMATE_QUARTER_MQTT_PASSWORD}"
+  },
+  "d743de38700fe770": {
+    "user": "${MOSQUITTO_USERNAME}",
+    "password": "${MOSQUITTO_PASSWORD}"
+  },
+  "5afb13261b305439": {
+    "user": "${PARKING_BARRIER_MQTT_USER}",
+    "password": "${PARKING_BARRIER_MQTT_PASSWORD}"
+  }
+}

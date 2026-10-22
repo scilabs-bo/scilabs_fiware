@@ -1,0 +1,277 @@
+name: smart-city-development
+
+services:
+  alertmanager:
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    restart: on-failure
+    volumes:
+      - alertmanager-development:/etc/alertmanager/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alertmanager.rule=Host(`alertmanager.localhost`)"
+      - "traefik.http.routers.alertmanager.tls=true"
+      - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
+      - "traefik.http.routers.alertmanager.middlewares=simpleAuth@file"
+
+
+  context-broker:
+    # environment:
+    # - QUARKUS_LOG_LEVEL=DEBUG
+    # - QUARKUS_LOG_CONSOLE_LEVEL=DEBUG
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    ports:
+      - 9090:9090
+    restart: on-failure
+
+  data-mock:
+    build: ./data-mock
+    container_name: data-mock
+    environment:
+      - FROGGIT_API_KEY=${FROGGIT_API_KEY}
+    depends_on:
+      subscription-init:
+        condition: service_completed_successfully
+      iot-agent-json-init:
+        condition: service_completed_successfully
+      nodered:
+        condition: service_healthy
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    restart: on-failure
+
+  grafana:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.localhost`)"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    platform: linux/amd64
+    restart: on-failure
+
+  iot-agent-lorawan:
+    networks:
+      - smart_city_external
+    restart: on-failure
+    ports:
+      - 4062:4062
+    environment:
+      - IOTA_LOG_LEVEL=DEBUG
+    platform: linux/amd64
+
+  iot-agent-json:
+    networks:
+      - smart_city_external
+    ports:
+      - 4041:4041
+      - 7896:7896
+    platform: linux/amd64
+    environment:
+      - IOTA_LOG_LEVEL=DEBUG
+    restart: on-failure
+
+  iot-agent-ul:
+    networks:
+      - smart_city_external
+    ports:
+      - 4061:4061
+      - 7897:7897
+    platform: linux/amd64
+    environment:
+      - IOTA_LOG_LEVEL=DEBUG
+    restart: on-failure
+
+  krakenD:
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.krakenD.rule=Host(`krakend.localhost`)"
+      - "traefik.http.routers.krakenD.tls=true"
+      - "traefik.http.services.krakenD.loadbalancer.server.port=8080"
+
+
+  context-hoster:
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    ports:
+      - 3004:80
+    restart: on-failure
+
+  mkcert:
+    command: /bin/sh -c 'cd /traefik/certs/ && mkcert -install && mkcert portainer.localhost && mkcert grafana.localhost && mkcert traefik.localhost && mkcert nodered.localhost && mkcert prometheus.localhost && mkcert pgadmin.localhost && mkcert mongodb.localhost && mkcert krakenD.localhost && mkcert alertmanager.localhost && mkcert localhost'
+    container_name: mkcert
+    image: brunopadz/mkcert-docker:v1.4.4
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    restart: on-failure
+    volumes:
+      - ./traefik/certs/:/traefik/certs/
+      - ./traefik/root-cert/:/root/.local/share/mkcert
+
+  mongo-db:
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    ports:
+      - 27017:27017
+    restart: on-failure
+
+  mosquitto-mqtt:
+    platform: linux/amd64
+    restart: on-failure
+
+  mongo-express:
+    platform: linux/amd64
+    ports:
+      - 8083:8081
+    restart: always
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mongo-express.rule=Host(`mongodb.localhost`)"
+      - "traefik.http.routers.mongo-express.tls=true"
+      - "traefik.http.services.mongo-express.loadbalancer.server.port=8081"
+
+  nodered:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.nodered.loadbalancer.server.port=1880"
+    platform: linux/amd64
+    ports:
+      - 1880:1880
+
+  node-exporter:
+    platform: linux/amd64
+    ports:
+      - 9100:9100
+
+  prometheus:
+    platform: linux/amd64
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.localhost`)"
+      - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - "traefik.http.routers.prometheus.middlewares=simpleAuth@file"
+
+  pgadmin:
+    platform: linux/amd64
+    environment:
+      - PGADMIN_CONFIG_SERVER_MODE=False # disables the pgadmin4 login screen.
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False #removes the need to enter the master password when the login screen is disabled.
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    ports:
+      - 8888:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.middlewares=simpleAuth@file"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.localhost`)"
+      - "traefik.http.routers.pgadmin.tls=true"
+      - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
+
+
+  # ngsi-data-mock:
+  #   platform: linux/amd64
+  #   build: ./ngsi-data-mock
+  #   container_name: ngsi-data-mock
+  #   depends_on:
+  #     subscription-init:
+  #       condition: service_completed_successfully
+  #   networks:
+  #     - smart_city_internal
+  #   environment:
+  #     - BASE_URL=http://context-broker:9090
+  #     - DEVICE_COUNT=5
+  #     - INTERVAL=1
+  #   restart: on-failure
+
+  portainer:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.localhost`)"
+      - "traefik.http.routers.portainer.tls=true"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+    networks:
+      - smart_city_external
+    ports:
+      - 9000:9000
+    platform: linux/amd64
+    restart: on-failure
+
+  quantumleap:
+    environment:
+      - LOGLEVEL=WARNING
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    ports:
+      - 8668:8668
+    restart: on-failure
+
+  context-broker-db:
+    ports:
+      - 5433:5432
+    platform: linux/amd64
+    networks:
+      - smart_city_external
+
+  timescale-db-quantumleap:
+    environment:
+      - LOGLEVEL=WARNING
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+    ports:
+      - 5434:5432
+    restart: on-failure
+
+  traefik:
+    command:
+      - "--configFile=/traefik/traefik_dev.yml"
+    depends_on:
+      mkcert:
+        condition: service_completed_successfully
+    networks:
+      - smart_city_internal
+      - smart_city_external
+    platform: linux/amd64
+    restart: on-failure
+
+  iot-agent-json-init:
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+
+  subscription-init:
+    networks:
+      - smart_city_external
+    platform: linux/amd64
+
+  backup-service:
+    platform: linux/amd64
+    networks:
+      - smart_city_external
+      - smart_city_internal
+
+  restore-service:
+    platform: linux/amd64
+    networks:
+      - smart_city_external
+      - smart_city_internal
+

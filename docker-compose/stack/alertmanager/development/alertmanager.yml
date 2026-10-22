@@ -1,0 +1,19 @@
+route:
+  # `group_wait` default is 30s, indicating the duration to hold off before sending an alert notification.
+  group_wait: 5s
+  receiver: "admin@example.com"
+
+global:
+  # The smarthost and SMTP sender used for mail notifications.
+  # Replace these placeholders with your mail server settings before the first start.
+  smtp_from: "Prometheus-Monitoring <alerts@example.com>"
+  smtp_smarthost: "smtp.example.com:465"
+  smtp_auth_username: "alerts@example.com"
+  smtp_auth_password: "change-me"
+  smtp_require_tls: false
+
+receivers:
+  - name: "admin@example.com"
+    email_configs:
+      - to: "admin@example.com"
+        send_resolved: true

@@ -1,0 +1,55 @@
+### Get quantumleap health
+
+GET http://localhost:8668/health HTTP/1.1
+
+
+### krakend - GET list of Entities by Type
+
+GET http://localhost:8081/v1/entities/Device
+
+### iot agent json - Get version
+
+GET http://localhost:4041/version
+
+### iot agent json - Delete device H001
+
+DELETE http://localhost:4061/iot/devices/H001
+fiware-service: smartcity
+fiware-servicepath: /miniature-house
+
+### iot agent json - delete service
+
+DELETE http://localhost:4041/iot/services?resource=/iot/json&apikey=testApiKey HTTP/1.1
+fiware-service: smartcity
+fiware-servicepath: /
+
+
+### iot agent json - delete device
+
+
+DELETE http://localhost:4061/iot/devices/H001
+fiware-service: smartcity
+fiware-servicepath: /miniature-house
+
+
+### scorpio context broker - Test if there are data available
+
+GET http://localhost:9090/ngsi-ld/v1/entities/?type=froggit-wh-4000-se
+NGSILD-Tenant: smartcity
+NGSILD-Path: /
+
+### scorpio context broker - Remove Entity WS001
+
+DELETE http://localhost:9090/ngsi-ld/v1/entities/urn:ngsi-ld:froggit-wh-4000-se:WS001/ HTTP/1.1
+Accept: application/json
+
+### scorpio context broker - Query contexts
+
+GET http://localhost:9090/ngsi-ld/v1/jsonldContexts?details=true
+Accept: application/json
+
+
+### scorpio context broker - Query hosted contexts
+
+GET http://localhost:9090/ngsi-ld/v1/jsonldContexts?details=true&kind=hosted
+Accept: application/json

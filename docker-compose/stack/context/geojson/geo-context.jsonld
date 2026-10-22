@@ -1,0 +1,74 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "geo": "http://context-hoster/geo/",
+    "id": "@id",
+    "type": "@type",
+    "geo:lat": {
+      "@id": "geo:lat",
+      "@type": "xsd:float",
+      "description": "Latitude of a geographical position."
+    },
+    "geo:long": {
+      "@id": "geo:long",
+      "@type": "xsd:float",
+      "description": "Longitude of a geographical position."
+    },
+    "geo:altitude": {
+      "@id": "geo:altitude",
+      "@type": "xsd:float",
+      "description": "Altitude of a geographical position."
+    },
+    "geo:location": {
+      "@id": "geo:location",
+      "@type": "GeoProperty",
+      "description": "Geographical location of an entity."
+    },
+    "geo:Point": {
+      "@id": "geo:Point",
+      "@type": "geo:location",
+      "description": "A point geometry as defined by GeoJSON."
+    },
+    "geo:Polygon": {
+      "@id": "geo:Polygon",
+      "@type": "geo:location",
+      "description": "A polygon geometry as defined by GeoJSON."
+    },
+    "geo:MultiPoint": {
+      "@id": "geo:MultiPoint",
+      "@type": "geo:location",
+      "description": "A collection of points as defined by GeoJSON."
+    },
+    "geo:LineString": {
+      "@id": "geo:LineString",
+      "@type": "geo:location",
+      "description": "A line geometry as defined by GeoJSON."
+    },
+    "geo:MultiLineString": {
+      "@id": "geo:MultiLineString",
+      "@type": "geo:location",
+      "description": "A collection of line geometries as defined by GeoJSON."
+    },
+    "geo:MultiPolygon": {
+      "@id": "geo:MultiPolygon",
+      "@type": "geo:location",
+      "description": "A collection of polygon geometries as defined by GeoJSON."
+    },
+    "geo:bbox": {
+      "@id": "geo:bbox",
+      "@type": "@list",
+      "description": "Bounding box array for the defined geometry."
+    },
+    "geo:coordinates": {
+      "@id": "geo:coordinates",
+      "@type": "@list",
+      "description": "Coordinates array for the defined geometry."
+    },
+    "geo:geometry": {
+      "@id": "geo:geometry",
+      "@type": "GeoProperty",
+      "description": "Geometry of the entity based on GeoJSON."
+    }
+  }
+}

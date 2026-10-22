@@ -1,0 +1,99 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "ngsi-ld": "http://context-hoster/ngsi-ld-core-context-v1.8.jsonld#",
+    "geojson": "http://context-hoster/geojson/geojson.jsonld#",
+    "id": "@id",
+    "type": "@type",
+
+    "BatV": {
+      "@id": "ngsi-ld:BatV",
+      "@type": "Property",
+      "description": "Bat Voltage of the device dragino-wqs-lb",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+          "@type": "ngsi-ld:unitCode",
+          "@id": "ngsi-ld:VLT"
+        }
+    },
+    "PH": {
+      "@id": "ngsi-ld:PH",
+      "@type": "Property",
+      "description": "The measured PH.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      }
+    },
+    "dissolved_oxygen": {
+      "@id": "ngsi-ld:dissolved_oxygen",
+      "@type": "Property",
+      "description": "The measured dissolved_oxygen.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:MGL"
+        }
+    },
+    "temp_DS18B20": {
+      "@id": "ngsi-ld:temp_DS18B20",
+      "@type": "Property",
+      "description": "The measured temperature.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:CEL"
+      }
+    },
+    "turbidity": {
+      "@id": "ngsi-ld:turbidity",
+      "@type": "Property",
+      "description": "The measured windDirection without correction.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Number"
+      },
+      "unitCode": {
+        "@type": "ngsi-ld:unitCode",
+        "@id": "ngsi-ld:NTU"
+      }
+    },
+    "location": {
+      "@id": "ngsi-ld:location",
+      "@type": "GeoProperty",
+      "description": "The geographic location of the entity.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "geojson:Point"
+      }
+    },
+    "name": {
+      "@id": "ngsi-ld:name",
+      "@type": "Property",
+      "description": "A name for this sensor.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:String"
+      }
+    },
+    "inactive": {
+      "@id": "ngsi-ld:inactive",
+      "@type": "Property",
+      "description": "Is this sensor active.",
+      "value": {
+        "@type": "ngsi-ld:hasValue",
+        "@id": "ngsi-ld:Boolean"
+      }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# To avoid problems within docker, we force eol to lf
+* text=auto eol=lf

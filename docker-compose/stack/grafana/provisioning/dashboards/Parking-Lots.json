@@ -1,0 +1,272 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 7,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P052245A3190431CB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "Ja": {
+                  "color": "dark-red",
+                  "index": 2
+                },
+                "Nein": {
+                  "color": "dark-green",
+                  "index": 3
+                },
+                "false": {
+                  "color": "dark-green",
+                  "index": 1,
+                  "text": "Nein"
+                },
+                "true": {
+                  "color": "dark-red",
+                  "index": 0,
+                  "text": "Ja"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "opacity": 1,
+          "type": "osm-standard"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": false,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "showLegend": false,
+              "style": {
+                "color": {
+                  "field": "Besetzt",
+                  "fixed": "dark-green"
+                },
+                "opacity": 0.6,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "clamped"
+                },
+                "size": {
+                  "fixed": 40,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/unicons/parking-circle.svg",
+                  "mode": "fixed"
+                },
+                "symbolAlign": {
+                  "horizontal": "center",
+                  "vertical": "center"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "location": {
+              "latitude": "latitude",
+              "longitude": "longitude",
+              "mode": "coords"
+            },
+            "name": "Layer 1",
+            "tooltip": true,
+            "type": "markers"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "coords",
+          "lat": 52.52,
+          "lon": 13.405,
+          "zoom": 17
+        }
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P052245A3190431CB"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT ON (entity_id)\nST_X(location) AS latitude,\nST_Y(location) AS longitude,\noccupied,\nname,\nentity_id\nFROM \"etbosch-parking-lot\" \nWHERE name in ($Sensor)\nORDER BY entity_id, time_index DESC",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Parkplätze",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "occupied",
+            "renamePattern": "Besetzt"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "latitude",
+            "renamePattern": "Höhengrad"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "longitude",
+            "renamePattern": "Breitengrad"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "name",
+            "renamePattern": "Name"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "entity_id",
+            "renamePattern": "ID"
+          }
+        }
+      ],
+      "type": "geomap"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": [
+            "urn:ngsi-ld:bosch-parking-lot:P001"
+          ],
+          "value": [
+            "urn:ngsi-ld:bosch-parking-lot:P001"
+          ]
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "P052245A3190431CB"
+        },
+        "definition": "SELECT DISTINCT on(name) name FROM \"etbosch-parking-lot\" WHERE inactive = 'false'",
+        "includeAll": true,
+        "label": "Sensor",
+        "multi": true,
+        "name": "Sensor",
+        "options": [],
+        "query": "SELECT DISTINCT on(name) name FROM \"etbosch-parking-lot\" WHERE inactive = 'false'",
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "browser",
+  "title": "Parkplatzsensoren",
+  "uid": "de31gihytkc8wd",
+  "version": 3,
+  "weekStart": ""
+}

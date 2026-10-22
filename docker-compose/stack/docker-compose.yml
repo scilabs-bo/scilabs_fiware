@@ -1,0 +1,828 @@
+name: smart-city
+
+services:
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    networks:
+      - smart_city_internal
+    volumes:
+      - alertmanager-production:/etc/alertmanager/
+    healthcheck:
+      test: "wget --quiet --tries=1 --spider http://localhost:9093/-/healthy || exit 1"
+      start_period: 30s
+      start_interval: 10s
+    restart: always
+    ports:
+      - 9093:9093
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alertmanager.middlewares=simpleAuth@file"
+      - "traefik.http.routers.alertmanager.rule=Host(`alertmanager.${DOMAIN}`)"
+      - "traefik.http.routers.alertmanager.tls=true"
+      - "traefik.http.routers.alertmanager.tls.certresolver=le"
+      - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
+
+  context-broker:
+    container_name: context-broker
+    build:
+      context: context-broker
+      dockerfile: Dockerfile
+    environment:
+      # refer to: https://github.com/ScorpioBroker/ScorpioBroker/blob/b29270fff542a9470dc1ecec51db39e298604367/AllInOneRunner/src/main/resources/application.properties
+      - DBHOST=context-broker-db
+      - DBUSER=${SCORPIO_DB_USER}
+      - DBPASS=${SCORPIO_DB_PASSWORD}
+      - QUARKUS_CONTEXT_LOCATION=${CONTEXT_URL}
+      - DBNAME=${SCORPIO_DB}
+      - SELFHOST_CORE_CONTEXT=${CONTEXT_URL}
+      - SCORPIO_HISTORY_AUTORECORDING=false
+      - JAVA_OPTS=${SCORPIO_JAVA_OPTS}
+    networks:
+      - smart_city_internal
+    depends_on:
+      context-broker-db:
+        condition: service_healthy
+      context-hoster:
+        condition: service_healthy
+      quantumleap:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail-with-body -s http://context-broker:9090/q/health || exit 1
+      start_period: 30s
+      start_interval: 2s
+    restart: always
+
+  context-broker-db:
+    container_name: context-broker-db
+    image: timescale/timescaledb-ha:pg16.4-ts2.17.2
+    networks:
+      - smart_city_internal
+    environment:
+      - TZ=Europe/Berlin
+      - POSTGRES_USER=${SCORPIO_DB_USER}
+      - POSTGRES_PASSWORD=${SCORPIO_DB_PASSWORD}
+      - POSTGRES_DB=${SCORPIO_DB}
+      - TIMESCALEDB_TELEMETRY=off
+    healthcheck:
+      test: psql -U ${SCORPIO_DB_USER} -d ${SCORPIO_DB} -c "SELECT * FROM pg_extension WHERE extname = 'postgis' OR extname = 'timescale'" | grep -E 'postgis|timescale'
+      start_period: 30s
+      start_interval: 2s
+    restart: always
+    volumes:
+      - context-broker-db-data:/var/lib/postgresql/data
+      - context-broker-db-init:/docker-entrypoint-initdb.d/
+
+  context-hoster:
+    container_name: context-hoster
+    healthcheck:
+      test: (wget --server-response --spider --quiet  $CONTEXT_URL 2>&1 | awk 'NR==1{print $$2}'|  grep -q -e "200") || exit 1
+      start_period: 30s
+      start_interval: 2s
+    image: httpd:2.4.62-alpine
+    networks:
+      - smart_city_internal
+    restart: always
+    volumes:
+      - context-data:/usr/local/apache2/htdocs/
+
+  grafana:
+    container_name: grafana
+    depends_on:
+      timescale-db-quantumleap:
+        condition: service_healthy
+    environment:
+      - TZ=Europe/Berlin
+      - GF_LOG_LEVEL=warn
+      - GF_AUTH_ANONYMOUS_ENABLED=TRUE
+      - GF_AUTH_ANONYMOUS_ORG_NAME=${GRAFANA_ANONYMOUS_ORG_NAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GRAFANA_POSTGRES_USER=${GRAFANA_POSTGRES_USER}
+      - GRAFANA_POSTGRES_PASSWORD=${GRAFANA_POSTGRES_PASSWORD}
+      - GF_INSTALL_PLUGINS=${GRAFANA_PLUGINS}
+      - POSTGRES_DB=${QUANTUMLEAP_DB}
+    healthcheck:
+      test: curl --fail-with-body  -s http://grafana:3000/api/health || exit 1
+      start_period: 30s
+      start_interval: 2s
+    image: grafana/grafana:11.3.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=le"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    ports:
+      - 3000:3000
+    restart: always
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-provisioning:/etc/grafana/provisioning/
+      - grafana-config:/etc/grafana/
+
+  krakenD:
+    container_name: krakend
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/__health || exit 1
+      start_period: 30s
+      start_interval: 2s
+    image: devopsfaith/krakend:2.7.2
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    ports:
+      - 8081:8080
+    restart: always
+    volumes:
+      - krakenD-data:/etc/krakend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.krakenD.rule=Host(`krakend.${DOMAIN}`)"
+      - "traefik.http.routers.krakenD.tls=true"
+      - "traefik.http.routers.krakenD.tls.certresolver=le"
+      - "traefik.http.services.krakenD.loadbalancer.server.port=8080"
+
+  iot-agent-json-init:
+    container_name: iot-agent-json-init
+    image: alpine/curl:8.9.1
+    volumes:
+      - ./iot-agent-json-init/scripts/init.sh:/usr/local/bin/init.sh
+    command: "/usr/local/bin/init.sh"
+    restart: no
+    entrypoint: ["/bin/sh"]
+    environment:
+      - FROGGIT_API_KEY=${FROGGIT_API_KEY}
+    networks:
+      - smart_city_internal
+    depends_on:
+      iot-agent-json:
+        condition: service_healthy
+
+  iot-agent-json:
+    # TODO Update to >= 3.6 breaks data flow
+    image: fiware/iotagent-json:3.6.0
+    container_name: iot-agent-json
+    healthcheck:
+      start_period: 30s
+      start_interval: 2s
+    depends_on:
+      context-broker:
+        condition: service_healthy
+      mongo-db:
+        condition: service_healthy
+    networks:
+      - smart_city_internal
+    restart: always
+    environment:
+      - IOTA_AMQP_DISABLED=true
+      - IOTA_AUTOCAST=true
+      - IOTA_AUTOPROVISION=false
+      - IOTA_CB_HOST=context-broker
+      - IOTA_CB_NGSI_VERSION=ld
+      - IOTA_CB_PORT=9090
+      - IOTA_DEFAULT_RESOURCE=/iot/json
+      - IOTA_DEFAULT_SERVICE=smartcity
+      - IOTA_DEFAULT_SUBSERVICE=/
+      - IOTA_FALLBACK_TENANT=smartcity
+      - IOTA_JSON_LD_CONTEXT=${CONTEXT_URL}
+      - IOTA_LOG_LEVEL=ERROR
+      - IOTA_MONGO_AUTH_SOURCE=admin
+      - IOTA_MONGO_DB=iot-agent-json
+      - IOTA_MONGO_HOST=mongo-db
+      - IOTA_MONGO_PASSWORD=${MONGO_PASSWORD}
+      - IOTA_MONGO_PORT=27017
+      - IOTA_MONGO_USER=${MONGO_USERNAME}
+      - IOTA_MQTT_DISABLED=true
+      - IOTA_PROVIDER_URL=http://iot-agent-json:4041
+      - IOTA_TIMESTAMP=true
+      - TZ=Europe/Berlin
+
+  iot-agent-ul-init:
+    command: "/usr/local/bin/init.sh"
+    container_name: iot-agent-ul-init
+    depends_on:
+      iot-agent-ul:
+        condition: service_healthy
+    entrypoint: ["/bin/sh"]
+    environment:
+      - CLIMATE_QUARTER_API_KEY=${CLIMATE_QUARTER_API_KEY}
+    image: alpine/curl:8.9.1
+    networks:
+      - smart_city_internal
+    platform: linux/amd64
+    volumes:
+      - ./iot-agent-ul-init/scripts/init.sh:/usr/local/bin/init.sh
+    restart: no
+
+  iot-agent-ul:
+    image: fiware/iotagent-ul:3.6.0
+    hostname: iot-agent-ul
+    container_name: iot-agent-ul
+    networks:
+      - smart_city_internal
+    depends_on:
+      mongo-db:
+        condition: service_healthy
+      context-broker:
+        condition: service_healthy
+    environment:
+      - IOTA_AMQP_DISABLED=true
+      - IOTA_CB_HOST=context-broker
+      - IOTA_CB_NGSI_VERSION=ld
+      - IOTA_CB_PORT=9090
+      - IOTA_DEFAULT_RESOURCE=/iot/ul
+      - IOTA_DEFAULT_SERVICE=smartcity
+      - IOTA_DEFAULT_SUBSERVICE=/miniature-house
+      - IOTA_FALLBACK_TENANT=smartcity
+      - IOTA_HTTP_PORT=7897
+      - IOTA_JSON_LD_CONTEXT=${CONTEXT_URL}
+      - IOTA_LOG_LEVEL=ERROR
+      - IOTA_MONGO_AUTH_SOURCE=admin
+      - IOTA_MONGO_DB=iot-agent-ul
+      - IOTA_MONGO_HOST=mongo-db
+      - IOTA_MONGO_PASSWORD=${MONGO_PASSWORD}
+      - IOTA_MONGO_PORT=27017
+      - IOTA_MONGO_USER=${MONGO_USERNAME}
+      - IOTA_MQTT_DISABLED=false
+      - IOTA_MQTT_HOST=mosquitto-mqtt
+      - IOTA_MQTT_PASSWORD=${MOSQUITTO_PASSWORD}
+      - IOTA_MQTT_PORT=1883
+      - IOTA_MQTT_TOPIC=/iot/ul
+      - IOTA_MQTT_USERNAME=${MOSQUITTO_USERNAME}
+      - IOTA_NORTH_PORT=4061
+      - IOTA_PROVIDER_URL=http://iot-agent-ul:4061
+      - IOTA_REGISTRY_TYPE=mongodb
+      - TZ=Europe/Berlin
+    restart: always
+
+  iot-agent-lorawan:
+    image: fiware/iotagent-lorawan:1.2.5
+    container_name: iot-agent-lorawan
+    hostname: iot-agent-lorawan
+    healthcheck:
+      test: ["CMD", "wget", "-O-", "http://iot-agent-lorawan:4062/iot/about"]
+      interval: 10s
+      timeout: 15s
+      retries: 10
+      start_period: 40s
+    depends_on:
+      context-broker:
+        condition: service_healthy
+      mongo-db:
+        condition: service_healthy
+    networks:
+      - smart_city_internal
+      - smart_city_external
+    restart: always
+    environment:
+      # refer to: https://github.com/Atos-Research-and-Innovation/IoTagent-LoRaWAN/blob/647cf97451d8367cee68836044e949b8b8c92c65/docker/config-docker.js
+      - IOTA_AMQP_DISABLED=true
+      - IOTA_AUTOCAST=true
+      - IOTA_AUTOPROVISION=false
+      - IOTA_CB_HOST=context-broker
+      - IOTA_CB_NGSI_VERSION=ld
+      - IOTA_CB_PORT=9090
+      - IOTA_DEFAULT_RESOURCE=/iot/json
+      - IOTA_DEFAULT_SERVICE=smartcity
+      - IOTA_DEFAULT_SUBSERVICE=/
+      - IOTA_FALLBACK_TENANT=smartcity
+      - IOTA_JSON_LD_CONTEXT=${CONTEXT_URL}
+      - IOTA_LOG_LEVEL=DEBUG
+      - IOTA_MONGO_AUTH_SOURCE=admin
+      - IOTA_MONGO_DB=iot-agent-lora
+      - IOTA_MONGO_HOST=mongo-db
+      - IOTA_MONGO_PASSWORD=${MONGO_PASSWORD}
+      - IOTA_MONGO_PORT=27017
+      - IOTA_MONGO_USER=${MONGO_USERNAME}
+      - IOTA_MQTT_DISABLED=false
+      - IOTA_MQTT_KEEPALIVE=60
+      - IOTA_NORTH_PORT=4062
+      - IOTA_PROVIDER_URL=http://iot-agent-lorawan:4062
+      - IOTA_REGISTRY_TYPE=mongodb
+      - IOTA_TIMESTAMP=true
+      - IOTA_MONGO_UNIFIED_TOPOLOGY=true
+      - TZ=Europe/Berlin
+
+  iot-agent-lorawan-init:
+    command: "/usr/local/bin/init.sh"
+    container_name: iot-agent-lorawan-init
+    depends_on:
+      iot-agent-lorawan:
+        condition: service_healthy
+    entrypoint: ["/bin/sh"]
+    environment:
+      - LORA_WEATHER_APPLICATION_USER=${LORA_WEATHER_APPLICATION_USER}
+      - LORA_WEATHER_APPLICATION_PASSWORD=${LORA_WEATHER_APPLICATION_PASSWORD}
+      - LORA_WEATHER_DEV_EUI=${LORA_WEATHER_DEV_EUI}
+      - LORA_WEATHER_APP_EUI=${LORA_WEATHER_APP_EUI}
+      - LORA_WEATHER_APP_KEY=${LORA_WEATHER_APP_KEY}
+      - LORA_PARKING_LOT_APPLICATION_USER=${LORA_PARKING_LOT_APPLICATION_USER}
+      - LORA_PARKING_LOT_APPLICATION_PASSWORD=${LORA_PARKING_LOT_APPLICATION_PASSWORD}
+      - LORA_PARKING_LOT_DEV_EUI=${LORA_PARKING_LOT_DEV_EUI}
+      - LORA_PARKING_LOT_APP_EUI=${LORA_PARKING_LOT_APP_EUI}
+      - LORA_PARKING_LOT_APP_KEY=${LORA_PARKING_LOT_APP_KEY}
+      - LORA_PARKING_BARRIER_APPLICATION_USER=${LORA_PARKING_BARRIER_APPLICATION_USER}
+      - LORA_PARKING_BARRIER_APPLICATION_PASSWORD=${LORA_PARKING_BARRIER_APPLICATION_PASSWORD}
+      - LORA_PARKING_BARRIER_DEV_EUI=${LORA_PARKING_BARRIER_DEV_EUI}
+      - LORA_PARKING_BARRIER_APP_EUI=${LORA_PARKING_BARRIER_APP_EUI}
+      - LORA_PARKING_BARRIER_APP_KEY=${LORA_PARKING_BARRIER_APP_KEY}
+      - LORA_PARKING_BARRIER_DEVICE_ID=${LORA_PARKING_BARRIER_DEVICE_ID}
+      - LORA_ZENNER_WASTE_APPLICATION_USER=${LORA_ZENNER_WASTE_APPLICATION_USER}
+      - LORA_ZENNER_WASTE_APPLICATION_PASSWORD=${LORA_ZENNER_WASTE_APPLICATION_PASSWORD}
+      - LORA_ZENNER_WASTE_DEV_EUI=${LORA_ZENNER_WASTE_DEV_EUI}
+      - LORA_ZENNER_WASTE_APP_EUI=${LORA_ZENNER_WASTE_APP_EUI}
+      - LORA_ZENNER_WASTE_APP_KEY=${LORA_ZENNER_WASTE_APP_KEY}
+      - TTN_BROKER=${TTN_BROKER}
+      - TTN_PORT=${TTN_PORT}
+      - LORA_DRAGINO_WQS_APPLICATION_USER=${LORA_DRAGINO_WQS_APPLICATION_USER}
+      - LORA_DRAGINO_WQS_APPLICATION_PASSWORD=${LORA_DRAGINO_WQS_APPLICATION_PASSWORD}
+      - LORA_DRAGINO_WQS_DEV_EUI=${LORA_DRAGINO_WQS_DEV_EUI}
+      - LORA_DRAGINO_WQS_APP_EUI=${LORA_DRAGINO_WQS_APP_EUI}
+      - LORA_DRAGINO_WQS_APP_KEY=${LORA_DRAGINO_WQS_APP_KEY}
+    image: alpine/curl:8.9.1
+    networks:
+      - smart_city_internal
+    platform: linux/amd64
+    volumes:
+      - ./iot-agent-lorawan-init/scripts/init.sh:/usr/local/bin/init.sh
+    restart: no
+
+  nodered:
+    container_name: nodered
+    build:
+      context: nodered
+      dockerfile: Dockerfile
+    healthcheck:
+      start_period: 30s
+      start_interval: 2s
+    ports:
+      - 1880:1880
+    depends_on:
+      iot-agent-json-init:
+        condition: service_completed_successfully
+      iot-agent-json:
+        condition: service_healthy
+    environment:
+      - TZ=Europe/Berlin
+      - IOT_AGENT_PROPERTY_POST_URL=${IOT_AGENT_PROPERTY_POST_URL}
+      - ELICHENS_API_KEY=${ELICHENS_API_KEY}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - PARKING_BARRIER_MQTT_USER=${LORA_PARKING_BARRIER_APPLICATION_USER}
+      - PARKING_BARRIER_MQTT_PASSWORD=${LORA_PARKING_BARRIER_APPLICATION_PASSWORD}
+      - NODE_RED_ADMIN_USER=${NODE_RED_ADMIN_USER}
+      - NODE_RED_ADMIN_PASSWORD_HASH=${NODE_RED_ADMIN_PASSWORD_HASH}
+      - MOSQUITTO_USERNAME=${MOSQUITTO_USERNAME}
+      - MOSQUITTO_PASSWORD=${MOSQUITTO_PASSWORD}
+      - CLIMATE_QUARTER_MQTT_URL=${CLIMATE_QUARTER_MQTT_URL}
+      - CLIMATE_QUARTER_MQTT_USER=${CLIMATE_QUARTER_MQTT_USER}
+      - CLIMATE_QUARTER_MQTT_PASSWORD=${CLIMATE_QUARTER_MQTT_PASSWORD}
+      - ELICHENS_STATION_ID=${ELICHENS_STATION_ID}
+    networks:
+      - smart_city_internal
+      - smart_city_external
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.nodered.loadbalancer.server.port=1880"
+
+  mongo-db:
+    container_name: mongo-db
+    command: --quiet
+    environment:
+      - TZ=Europe/Berlin
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    healthcheck:
+      test: mongosh --eval 'db.runCommand("ping").ok' --quiet
+      start_period: 30s
+      start_interval: 2s
+    image: mongo:7.0.14
+    networks:
+      - smart_city_internal
+    restart: always
+    volumes:
+      - mongo-db-data:/data/db
+
+  mongo-express:
+    platform: linux/amd64
+    container_name: mongo-express
+    ports:
+      - 8083:8081
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo-db:27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=${MONGO_USERNAME}
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=${MONGO_PASSWORD}
+      - ME_CONFIG_HEALTH_CHECK_PATH=/status
+      - ME_CONFIG_BASICAUTH_ENABLED=true
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGO_EXPRESS_USERNAME}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGO_EXPRESS_PASSWORD}
+      - ME_CONFIG_OPTIONS_READONLY=true
+      - ME_CONFIG_OPTIONS_NO_DELETE=true
+    depends_on:
+      mongo-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-O-", "http://mongo-express:8081/status"]
+      start_period: 30s
+      start_interval: 5s
+    image: mongo-express:1.0.2-20-alpine3.19
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mongo-express.rule=Host(`mongodb.${DOMAIN}`)"
+      - "traefik.http.routers.mongo-express.tls=true"
+      - "traefik.http.routers.mongo-express.tls.certresolver=le"
+      - "traefik.http.services.mongo-express.loadbalancer.server.port=8081"
+
+  mosquitto-mqtt:
+    container_name: mosquitto-mqtt
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    healthcheck:
+      test: mosquitto_sub -h mosquitto-mqtt -u ${MOSQUITTO_USERNAME} -P ${MOSQUITTO_PASSWORD}  -t '$$SYS/broker/uptime' -C 1 -i healthcheck -W 3
+      start_period: 30s
+      start_interval: 2s
+    image: eclipse-mosquitto:2.0.20
+    environment:
+      - MOSQUITTO_USERNAME=${MOSQUITTO_USERNAME}
+      - MOSQUITTO_PASSWORD=${MOSQUITTO_PASSWORD}
+    # the password file is created from the .env values on every start
+    command: >
+      sh -c 'mosquitto_passwd -b -c /mosquitto/data/mosquitto.passwd "$$MOSQUITTO_USERNAME" "$$MOSQUITTO_PASSWORD"
+      && chown mosquitto:mosquitto /mosquitto/data/mosquitto.passwd
+      && chmod 0600 /mosquitto/data/mosquitto.passwd
+      && exec mosquitto -c /mosquitto/config/mosquitto.conf'
+    ports:
+      - 1883:1883
+    restart: always
+    volumes:
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-config:/mosquitto/config:ro
+
+  node-exporter:
+    container_name: node-exporter
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    healthcheck:
+      test: "wget --quiet --tries=1 --spider http://localhost:9100/ || exit 1"
+      start_period: 30s
+      start_interval: 2s
+    image: prom/node-exporter:v1.8.2
+    networks:
+      - smart_city_internal
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    restart: always
+
+  prometheus:
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=1d"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    depends_on:
+      alertmanager:
+        condition: service_healthy
+      node-exporter:
+        condition: service_healthy
+    image: prom/prometheus:v3.0.0
+    networks:
+      - smart_city_internal
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "-O-", "http://localhost:9090"]
+      interval: 10s
+      timeout: 15s
+      retries: 10
+      start_period: 40s
+    volumes:
+      - prometheus_config:/etc/prometheus
+      - prometheus_data:/prometheus
+    ports:
+      - 9091:9090
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.${DOMAIN}`)"
+      - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.routers.prometheus.tls.certresolver=le"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - "traefik.http.routers.prometheus.middlewares=simpleAuth@file"
+
+  portainer:
+    image: portainer/portainer-ce:2.23.0-alpine
+    container_name: portainer
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://portainer:9000/api/system/status || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+    networks:
+      - smart_city_external
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)"
+      - "traefik.http.routers.portainer.tls=true"
+      - "traefik.http.routers.portainer.tls.certresolver=le"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+
+  pgadmin:
+    image: dpage/pgadmin4:8.13.0
+    container_name: pgadmin
+    restart: always
+    networks:
+      - smart_city_external
+      - smart_city_internal
+    ports:
+      - 8888:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+      - PGADMIN_SERVER_JSON_FILE=/pgadmin4/config/servers.json
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://pgadmin:80/misc/ping"]
+      start_period: 30s
+      start_interval: 5s
+    depends_on:
+      timescale-db-quantumleap:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - pgadmin_config:/pgadmin4/config/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.middlewares=simpleAuth@file"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN}`)"
+      - "traefik.http.routers.pgadmin.tls=true"
+      - "traefik.http.routers.pgadmin.tls.certresolver=le"
+      - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
+
+  quantumleap:
+    build:
+      context: quantumleap
+      dockerfile: Dockerfile
+    container_name: quantumleap
+    depends_on:
+      timescale-db-quantumleap:
+        condition: service_healthy
+    environment:
+      - TZ=Europe/Berlin
+      - QL_DEFAULT_DB=timescale
+      - POSTGRES_HOST=timescale-db-quantumleap
+      - POSTGRES_DB_NAME=${QUANTUMLEAP_DB}
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB_USER=${QUANTUMLEAP_DB_USER}
+      - POSTGRES_DB_PASS=${QUANTUMLEAP_DB_PASSWORD}
+      - CONTEXT_URL=${CONTEXT_URL}
+    healthcheck:
+      test: curl --fail-with-body -s http://quantumleap:8668/health || exit 1
+      start_period: 30s
+      start_interval: 2s
+    networks:
+      - smart_city_internal
+    restart: always
+
+  subscription-init:
+    build: ./subscription-init
+    container_name: subscription-init
+    depends_on:
+      context-broker:
+        condition: service_healthy
+    environment:
+      - BASE_URL=http://context-broker:9090
+      - NOTIFICATION_ENDPOINT_URL=http://quantumleap:8668/v2/notify
+    networks:
+      - smart_city_internal
+    restart: "no"
+
+  timescale-db-quantumleap:
+    container_name: timescale-db-quantumleap
+    environment:
+      - TZ=Europe/Berlin
+      - POSTGRES_USER=${QUANTUMLEAP_DB_USER}
+      - POSTGRES_PASSWORD=${QUANTUMLEAP_DB_PASSWORD}
+      - POSTGRES_DB=${QUANTUMLEAP_DB}
+      - TIMESCALEDB_TELEMETRY=off
+      - GRAFANA_POSTGRES_PASSWORD=${GRAFANA_POSTGRES_PASSWORD}
+      - GRAFANA_POSTGRES_USER=${GRAFANA_POSTGRES_USER}
+      - QUANTUMLEAP_DB_BACKUP_USER=${QUANTUMLEAP_DB_BACKUP_USER}
+      - QUANTUMLEAP_DB_BACKUP_PASSWORD=${QUANTUMLEAP_DB_BACKUP_PASSWORD}
+    command: postgres -c config_file=/conf/postgresql.conf -c hba_file=/conf/pg_hba.conf
+    healthcheck:
+      test: psql -U ${QUANTUMLEAP_DB_USER} -d ${QUANTUMLEAP_DB} -c "SELECT * FROM pg_extension WHERE extname = 'postgis' OR extname = 'timescale'" | grep -E 'postgis|timescale'
+      start_period: 30s
+      start_interval: 2s
+    image: timescale/timescaledb-ha:pg13.16-ts2.15.3
+    networks:
+      - smart_city_internal
+    restart: always
+    volumes:
+      - timescale-db-quantumleap-data:/home/postgres/pgdata
+      - timescale-db-quantumleap-conf:/conf
+      - timescale-db-quantumleap-init:/docker-entrypoint-initdb.d/
+    depends_on:
+      restore-service:
+        condition: service_completed_successfully
+
+  traefik:
+    image: traefik:v3.6.25
+    container_name: traefik
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+      - 8082:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-data:/traefik/
+    networks:
+      - smart_city_external
+    environment:
+      - DOMAIN=${DOMAIN}
+      - TRAEFIK_BASIC_AUTH=${TRAEFIK_BASIC_AUTH}
+    command:
+      - "--configFile=/traefik/traefik.yml"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080 || exit 1
+      interval: 10s
+      timeout: 1s
+      retries: 3
+      start_period: 10s
+
+  backup-service:
+    build:
+      context: backup-service
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    container_name: backup-service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - QUANTUMLEAP_DB_USER=${QUANTUMLEAP_DB_BACKUP_USER}
+      - PGPASSWORD=${QUANTUMLEAP_DB_BACKUP_PASSWORD}
+      - QUANTUMLEAP_DB=${QUANTUMLEAP_DB}
+      - QUANTUMLEAP_DB_HOST=${QUANTUMLEAP_DB_HOST}
+    volumes:
+      - timescale-db-quantumleap-data:/backup-service/data
+      - backup-service-data:/backup-service/backups
+      - backup-service-log:/var/log/backup-service
+    depends_on:
+      timescale-db-quantumleap:
+        condition: service_healthy
+      restore-service:
+        condition: service_completed_successfully
+    networks:
+      - smart_city_internal
+
+  restore-service:
+    build:
+      context: restore-service
+      dockerfile: Dockerfile
+    container_name: restore-service
+    environment:
+      - RESTORE_ON=${RESTORE_ON}
+      - QUANTUMLEAP_DB_USER=${QUANTUMLEAP_DB_BACKUP_USER}
+      - PGPASSWORD=${QUANTUMLEAP_DB_BACKUP_PASSWORD}
+      - QUANTUMLEAP_DB=${QUANTUMLEAP_DB}
+      - QUANTUMLEAP_DB_HOST=${QUANTUMLEAP_DB_HOST}
+    volumes:
+      - backup-service-data:/restore-service/backups
+      - timescale-db-quantumleap-data:/restore-service/timescale_data/
+      - restore-service-log:/var/log/restore-service
+    restart: no
+    networks:
+      - smart_city_internal
+
+networks:
+  smart_city_internal:
+    name: smart_city_internal
+    driver: bridge
+    internal: true
+
+  smart_city_external:
+    name: smart_city_external
+    driver: bridge
+    internal: false
+
+volumes:
+  alertmanager-production:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./alertmanager/production
+  alertmanager-development:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./alertmanager/development
+  context-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./context
+  grafana-data:
+  grafana-provisioning:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./grafana/provisioning
+  grafana-config:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./grafana/config
+  krakenD-data:
+  mongo-db-data:
+  mosquitto-config:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./mosquitto-mqtt/mosquitto_config
+  mosquitto-data:
+  nodered-data:
+  portainer-data:
+  pgadmin_data:
+  pgadmin_config:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./pgadmin/config/
+  context-broker-db-data:
+  context-broker-db-init:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./context-broker-db/init
+  timescale-db-quantumleap-data:
+  prometheus_data:
+  prometheus_config:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./prometheus/
+  timescale-db-quantumleap-init:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./timescale-db-quantumleap/init
+  timescale-db-quantumleap-conf:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./timescale-db-quantumleap/conf
+  traefik-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./traefik/
+  backup-service-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./backup-service/backups
+  backup-service-log:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./backup-service/log
+  restore-service-log:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./restore-service/log
